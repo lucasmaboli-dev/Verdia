@@ -1,0 +1,157 @@
+// ============================================================
+// VERDIA ECOSYSTEM — Daily Settlement Smart Contract
+// Basileia Programável: Liquidação Diária On-Chain
+// ============================================================
+// Pseudocódigo para implementação em Solidity (Layer 2)
+// NÃO é código de produção — serve como especificação formal
+// ============================================================
+
+contract VerdiaDailySettlement {
+
+    // ── State Variables ──────────────────────────────────────
+    uint256 public R;           // Reserva fiduciária [wei]
+    uint256 public T;           // Tokens em circulação [VRD]
+    uint256 public V;           // Valor de liquidação [wei/VRD]
+    uint256 public Q;           // Fila de resgates [VRD]
+    
+    uint256 public delta = 20;  // Buffer prudencial (20% = 20/100)
+    uint256 public rho = 50;    // Fração liquidez (50% = 50/100)
+    uint256 public betaBase = 5;   // 5% base
+    uint256 public betaMax = 30;   // 30% máximo
+    uint256 public kappa;       // Conversão produção→tokens
+
+    enum State { NORMAL, ALERT, CRISIS }
+    State public currentState = State.NORMAL;
+
+    // Histerese
+    uint256 public deltaDown = 18;
+    uint256 public deltaUp = 22;
+
+    // ── Events ───────────────────────────────────────────────
+    event DailySettlement(
+        uint256 indexed day,
+        uint256 CCS_bps,        // CCS em basis points (10000 = 1.00)
+        State   state,
+        uint256 emission,
+        uint256 burn,
+        uint256 redeemed,
+        uint256 outflow
+    );
+
+    // ── Core Metrics ─────────────────────────────────────────
+    
+    function getCCS() public view returns (uint256) {
+        // CCS = R / (T × V) — retorna em basis points (10000 = 1.00)
+        if (T == 0 || V == 0) return type(uint256).max;
+        return (R * 10000) / (T * V);
+    }
+
+    function getLiquidity() public view returns (uint256) {
+        // L = ρ × R
+        return (rho * R) / 100;
+    }
+
+    // ── State Machine (com histerese) ────────────────────────
+
+    function updateState(uint256 lcr_bps) internal {
+        uint256 ccs = getCCS();
+        
+        if (currentState == State.NORMAL) {
+            if (ccs < 10000 || lcr_bps < 8000) {
+                currentState = State.CRISIS;
+            } else if (ccs < 10000 + deltaDown * 100 || lcr_bps < 10000) {
+                currentState = State.ALERT;
+            }
+        }
+        else if (currentState == State.ALERT) {
+            if (ccs < 10000 || lcr_bps < 8000) {
+                currentState = State.CRISIS;
+            } else if (ccs >= 10000 + deltaUp * 100 && lcr_bps >= 10000) {
+                currentState = State.NORMAL;
+            }
+        }
+        else if (currentState == State.CRISIS) {
+            if (ccs >= 10000 + deltaUp * 100 && lcr_bps >= 10000) {
+                currentState = State.NORMAL;
+            } else if (ccs >= 10000 + deltaDown * 100 && lcr_bps >= 8000) {
+                currentState = State.ALERT;
+            }
+        }
+    }
+
+    // ── Daily Settlement ─────────────────────────────────────
+
+    function dailySettle(
+        uint256 P_eff,      // Produção efetiva validada (PoPA)
+        uint256 I_t,        // Inflow fiduciário do dia
+        uint256 W_t,        // Tokens solicitados para resgate
+        uint256 U_t         // Tokens gastos em utilidades
+    ) external onlyOracle {
+        
+        // Step 1: Calcular CCS
+        uint256 ccs = getCCS();
+        
+        // Step 2: Calcular LCR
+        uint256 L = getLiquidity();
+        uint256 expectedOut = W_t * V;
+        uint256 lcr_bps = expectedOut > 0 
+            ? (L * 10000) / expectedOut 
+            : type(uint256).max;
+        
+        // Step 3: Atualizar estado (histerese)
+        updateState(lcr_bps);
+        
+        // Step 4: Calcular emissão
+        uint256 g = getEmissionFactor();
+        uint256 E_t = (kappa * P_eff * g) / 100;
+        
+        // Step 5: Calcular queima
+        uint256 beta = getBurnRate();
+        uint256 sterilization = V > 0 ? (beta * I_t) / (100 * V) : 0;
+        uint256 B_t = sterilization + U_t;
+        
+        // Step 6: Processar resgates
+        uint256 maxRedeem = V > 0 ? L / V : 0;
+        uint256 X_t = min(W_t + Q, maxRedeem);
+        uint256 Out_t = X_t * V;
+        
+        // Step 7: Atualizar ledger
+        T = T + E_t - min(B_t, T);
+        R = R + I_t - min(Out_t, R);
+        Q = Q + W_t - X_t;
+        
+        // Step 8: Emitir evento on-chain
+        emit DailySettlement(
+            block.timestamp / 1 days,
+            getCCS(),
+            currentState,
+            E_t, B_t, X_t, Out_t
+        );
+    }
+
+    // ── Helpers ───────────────────────────────────────────────
+
+    function getEmissionFactor() internal view returns (uint256) {
+        if (currentState == State.NORMAL) return 100;  // 100%
+        if (currentState == State.ALERT)  return 30;   // 30% (η)
+        return 0;                                       // 0% (crise)
+    }
+
+    function getBurnRate() internal view returns (uint256) {
+        if (currentState == State.NORMAL) return betaBase;
+        if (currentState == State.ALERT)  return betaBase * 2;
+        return betaMax;
+    }
+
+    function min(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a < b ? a : b;
+    }
+
+    // ── Access Control ───────────────────────────────────────
+    
+    modifier onlyOracle() {
+        // Apenas o oráculo PoPA validado pode chamar dailySettle
+        require(msg.sender == popaOracle, "Not authorized");
+        _;
+    }
+}

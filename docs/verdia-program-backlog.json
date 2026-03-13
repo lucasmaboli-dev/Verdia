@@ -1,0 +1,713 @@
+{
+  "program_plan": {
+    "name": "Verdia Program Backlog",
+    "version": "1.0",
+    "purpose": "Converter a arquitetura consolidada do Ecossistema Verdia em backlog executável de programa.",
+    "planning_principle": "Executar em trilhas paralelas com dependências explícitas, gates de qualidade e freeze progressivo.",
+    "execution_model": {
+      "type": "PMO técnico + regulatório",
+      "mode": "parallel_workstreams_with_quality_gates",
+      "governance_cadence": {
+        "weekly": [
+          "acompanhamento tático",
+          "atualização riscos"
+        ],
+        "biweekly": [
+          "comitê integração"
+        ],
+        "monthly": [
+          "gate review",
+          "replanejamento"
+        ]
+      }
+    },
+    "global_gates": [
+      {
+        "gate_id": "G0",
+        "name": "Program Alignment",
+        "objective": "Validar escopo, tese, premissas e governança.",
+        "exit_criteria": [
+          "backlog priorizado",
+          "RACI macro",
+          "dependências mapeadas"
+        ]
+      },
+      {
+        "gate_id": "G1",
+        "name": "Architecture Baseline Freeze",
+        "objective": "Congelar baseline de arquitetura MVP.",
+        "exit_criteria": [
+          "diagramas aprovados",
+          "fronteira off/on-chain",
+          "modelo dados mínimo",
+          "SLOs críticos"
+        ]
+      },
+      {
+        "gate_id": "G2",
+        "name": "Regulatory and Economic Feasibility",
+        "objective": "Validar viabilidade regulatória e coerência econômica.",
+        "exit_criteria": [
+          "parecer jurídico preliminar",
+          "riscos regulatórios classificados",
+          "premissas econômicas revisadas"
+        ]
+      },
+      {
+        "gate_id": "G3",
+        "name": "MVP Design Freeze",
+        "objective": "Congelar escopo MVP.",
+        "exit_criteria": [
+          "escopo MVP aprovado",
+          "critérios aceite piloto",
+          "instrumentação definida"
+        ]
+      },
+      {
+        "gate_id": "G4",
+        "name": "Pilot Readiness",
+        "objective": "Liberar piloto com controles mínimos.",
+        "exit_criteria": [
+          "runbook operacional",
+          "SOPs mínimos",
+          "métricas sucesso",
+          "plano contingência"
+        ]
+      },
+      {
+        "gate_id": "G5",
+        "name": "Scientific and Investor Readiness",
+        "objective": "Capacidade de defesa acadêmica e econômica.",
+        "exit_criteria": [
+          "hipóteses testáveis fechadas",
+          "narrativa validada",
+          "documentação institucional"
+        ]
+      }
+    ],
+    "roles_catalog": {
+      "program_sponsor": "Founder / Strategy Lead",
+      "program_manager": "PMO Lead",
+      "enterprise_architect": "Lead Architect",
+      "solution_architect": "Solution Architect",
+      "data_ai_lead": "Data & AI Lead",
+      "blockchain_tokenomics_lead": "Blockchain & Tokenomics Lead",
+      "product_ux_lead": "Product & UX Lead",
+      "compliance_legal_lead": "Compliance & Legal Lead",
+      "operations_field_lead": "Operations & Cooperative Enablement Lead",
+      "finance_strategy_lead": "Finance & Corporate Strategy Lead",
+      "growth_gtm_lead": "Growth & GTM Lead",
+      "research_simulation_lead": "Research & Simulation Lead",
+      "security_lead": "Security & Privacy Lead"
+    },
+    "workstreams": [
+      {
+        "workstream_id": "WS1",
+        "name": "Arquitetura e Plataforma",
+        "scope": [
+          "arquitetura estratégica",
+          "tecnológica",
+          "PoPA",
+          "estrutura institucional"
+        ]
+      },
+      {
+        "workstream_id": "WS2",
+        "name": "Tokenomics e Viabilidade Econômica",
+        "scope": [
+          "tokenomics",
+          "monetização",
+          "projeção financeira",
+          "custos"
+        ]
+      },
+      {
+        "workstream_id": "WS3",
+        "name": "Compliance, ESG e Segurança",
+        "scope": [
+          "compliance ESG",
+          "riscos regulatórios",
+          "governança dados",
+          "segurança"
+        ]
+      },
+      {
+        "workstream_id": "WS4",
+        "name": "Produto, UX e Operação",
+        "scope": [
+          "engenharia comportamental",
+          "UX/UI",
+          "operações piloto",
+          "instrumentação"
+        ]
+      },
+      {
+        "workstream_id": "WS5",
+        "name": "Go-to-Market, Pesquisa e Narrativa",
+        "scope": [
+          "GTM",
+          "simulação",
+          "fundamentação teórica",
+          "pitch",
+          "consolidação acadêmica"
+        ]
+      }
+    ],
+    "backlog": [
+      {
+        "block_id": "01",
+        "block_name": "Arquitetura Estratégica",
+        "domain": "architecture",
+        "workstream_id": "WS1",
+        "priority": "critical",
+        "owner_role": "enterprise_architect",
+        "supporting_roles": [
+          "program_sponsor",
+          "finance_strategy_lead",
+          "growth_gtm_lead"
+        ],
+        "objective": "Traduzir tese em arquitetura de negócio operacional.",
+        "dependencies": [],
+        "gate_mapping": [
+          "G0",
+          "G1"
+        ]
+      },
+      {
+        "block_id": "02",
+        "block_name": "Arquitetura Tecnológica",
+        "domain": "architecture",
+        "workstream_id": "WS1",
+        "priority": "critical",
+        "owner_role": "solution_architect",
+        "supporting_roles": [
+          "enterprise_architect",
+          "data_ai_lead",
+          "blockchain_tokenomics_lead",
+          "security_lead"
+        ],
+        "objective": "Definir arquitetura técnica em camadas.",
+        "dependencies": [
+          "01"
+        ],
+        "gate_mapping": [
+          "G1",
+          "G3"
+        ]
+      },
+      {
+        "block_id": "03",
+        "block_name": "Protocolo PoPA",
+        "domain": "architecture",
+        "workstream_id": "WS1",
+        "priority": "critical",
+        "owner_role": "solution_architect",
+        "supporting_roles": [
+          "data_ai_lead",
+          "operations_field_lead",
+          "security_lead"
+        ],
+        "objective": "Especificar PoPA como mecanismo de validação físico-digital.",
+        "dependencies": [
+          "02"
+        ],
+        "gate_mapping": [
+          "G1",
+          "G4"
+        ]
+      },
+      {
+        "block_id": "04",
+        "block_name": "Tokenomics",
+        "domain": "tokenomics",
+        "workstream_id": "WS2",
+        "priority": "critical",
+        "owner_role": "blockchain_tokenomics_lead",
+        "supporting_roles": [
+          "finance_strategy_lead",
+          "compliance_legal_lead",
+          "research_simulation_lead"
+        ],
+        "objective": "Transformar $VRD em política monetária programável.",
+        "dependencies": [
+          "01",
+          "02"
+        ],
+        "gate_mapping": [
+          "G2",
+          "G5"
+        ]
+      },
+      {
+        "block_id": "05",
+        "block_name": "Engenharia Comportamental",
+        "domain": "ux",
+        "workstream_id": "WS4",
+        "priority": "high",
+        "owner_role": "product_ux_lead",
+        "supporting_roles": [
+          "growth_gtm_lead",
+          "research_simulation_lead"
+        ],
+        "objective": "Converter lógica de engajamento em mecanismos acionáveis.",
+        "dependencies": [
+          "01"
+        ],
+        "gate_mapping": [
+          "G3",
+          "G5"
+        ]
+      },
+      {
+        "block_id": "06",
+        "block_name": "UX/UI",
+        "domain": "ux",
+        "workstream_id": "WS4",
+        "priority": "critical",
+        "owner_role": "product_ux_lead",
+        "supporting_roles": [
+          "solution_architect",
+          "operations_field_lead",
+          "growth_gtm_lead"
+        ],
+        "objective": "Projetar experiências distintas por persona.",
+        "dependencies": [
+          "02",
+          "05"
+        ],
+        "gate_mapping": [
+          "G3",
+          "G4"
+        ]
+      },
+      {
+        "block_id": "07",
+        "block_name": "Compliance ESG by Design",
+        "domain": "compliance",
+        "workstream_id": "WS3",
+        "priority": "critical",
+        "owner_role": "compliance_legal_lead",
+        "supporting_roles": [
+          "security_lead",
+          "solution_architect",
+          "blockchain_tokenomics_lead"
+        ],
+        "objective": "Traduzir pilares E, S, G em artefatos verificáveis.",
+        "dependencies": [
+          "02",
+          "03",
+          "04"
+        ],
+        "gate_mapping": [
+          "G2",
+          "G4"
+        ]
+      },
+      {
+        "block_id": "08",
+        "block_name": "Modelo de Monetização",
+        "domain": "gtm",
+        "workstream_id": "WS2",
+        "priority": "critical",
+        "owner_role": "finance_strategy_lead",
+        "supporting_roles": [
+          "growth_gtm_lead",
+          "program_sponsor"
+        ],
+        "objective": "Transformar tese WIaaS em modelo de receita executável.",
+        "dependencies": [
+          "01"
+        ],
+        "gate_mapping": [
+          "G2",
+          "G5"
+        ]
+      },
+      {
+        "block_id": "09",
+        "block_name": "Projeção Financeira 5 Anos",
+        "domain": "tokenomics",
+        "workstream_id": "WS2",
+        "priority": "high",
+        "owner_role": "finance_strategy_lead",
+        "supporting_roles": [
+          "program_sponsor",
+          "blockchain_tokenomics_lead",
+          "growth_gtm_lead"
+        ],
+        "objective": "Estruturar modelo financeiro de cenários.",
+        "dependencies": [
+          "08"
+        ],
+        "gate_mapping": [
+          "G2",
+          "G5"
+        ]
+      },
+      {
+        "block_id": "10",
+        "block_name": "Estrutura de Custos",
+        "domain": "tokenomics",
+        "workstream_id": "WS2",
+        "priority": "high",
+        "owner_role": "finance_strategy_lead",
+        "supporting_roles": [
+          "solution_architect",
+          "operations_field_lead"
+        ],
+        "objective": "Detalhar base de custos do MVP e escala.",
+        "dependencies": [
+          "02",
+          "08"
+        ],
+        "gate_mapping": [
+          "G2",
+          "G3"
+        ]
+      },
+      {
+        "block_id": "11",
+        "block_name": "GTM Strategy",
+        "domain": "gtm",
+        "workstream_id": "WS5",
+        "priority": "critical",
+        "owner_role": "growth_gtm_lead",
+        "supporting_roles": [
+          "program_sponsor",
+          "finance_strategy_lead",
+          "operations_field_lead",
+          "product_ux_lead"
+        ],
+        "objective": "Desenhar sequência de entrada no mercado.",
+        "dependencies": [
+          "01",
+          "08"
+        ],
+        "gate_mapping": [
+          "G3",
+          "G4",
+          "G5"
+        ]
+      },
+      {
+        "block_id": "12",
+        "block_name": "Análise de Riscos",
+        "domain": "compliance",
+        "workstream_id": "WS3",
+        "priority": "critical",
+        "owner_role": "security_lead",
+        "supporting_roles": [
+          "compliance_legal_lead",
+          "solution_architect",
+          "operations_field_lead",
+          "finance_strategy_lead"
+        ],
+        "objective": "Consolidar matriz de riscos com mitigadores.",
+        "dependencies": [
+          "02",
+          "04",
+          "07"
+        ],
+        "gate_mapping": [
+          "G2",
+          "G4",
+          "G5"
+        ]
+      },
+      {
+        "block_id": "13",
+        "block_name": "Simulação Computacional",
+        "domain": "simulation",
+        "workstream_id": "WS5",
+        "priority": "high",
+        "owner_role": "research_simulation_lead",
+        "supporting_roles": [
+          "blockchain_tokenomics_lead",
+          "finance_strategy_lead"
+        ],
+        "objective": "Modelo falsificável via ABM e Monte Carlo.",
+        "dependencies": [
+          "04",
+          "05",
+          "09"
+        ],
+        "gate_mapping": [
+          "G5"
+        ]
+      },
+      {
+        "block_id": "14",
+        "block_name": "Fundamentação Teórica",
+        "domain": "simulation",
+        "workstream_id": "WS5",
+        "priority": "medium",
+        "owner_role": "research_simulation_lead",
+        "supporting_roles": [
+          "program_sponsor"
+        ],
+        "objective": "Consolidar base conceitual.",
+        "dependencies": [
+          "01",
+          "04",
+          "05",
+          "13"
+        ],
+        "gate_mapping": [
+          "G5"
+        ]
+      },
+      {
+        "block_id": "15",
+        "block_name": "Estrutura Institucional",
+        "domain": "compliance",
+        "workstream_id": "WS1",
+        "priority": "high",
+        "owner_role": "compliance_legal_lead",
+        "supporting_roles": [
+          "program_sponsor",
+          "finance_strategy_lead",
+          "blockchain_tokenomics_lead"
+        ],
+        "objective": "Definir estrutura societária e governança.",
+        "dependencies": [
+          "04",
+          "07"
+        ],
+        "gate_mapping": [
+          "G2",
+          "G5"
+        ]
+      },
+      {
+        "block_id": "16",
+        "block_name": "Pitch VC",
+        "domain": "gtm",
+        "workstream_id": "WS5",
+        "priority": "medium",
+        "owner_role": "finance_strategy_lead",
+        "supporting_roles": [
+          "program_sponsor",
+          "growth_gtm_lead"
+        ],
+        "objective": "Narrativa de captação com coerência técnica.",
+        "dependencies": [
+          "08",
+          "09",
+          "11",
+          "12"
+        ],
+        "gate_mapping": [
+          "G5"
+        ]
+      },
+      {
+        "block_id": "17",
+        "block_name": "Consolidação Acadêmica",
+        "domain": "simulation",
+        "workstream_id": "WS5",
+        "priority": "high",
+        "owner_role": "research_simulation_lead",
+        "supporting_roles": [
+          "program_sponsor",
+          "enterprise_architect",
+          "blockchain_tokenomics_lead"
+        ],
+        "objective": "Organizar arquitetura em estrutura acadêmica.",
+        "dependencies": [
+          "13",
+          "14"
+        ],
+        "gate_mapping": [
+          "G5"
+        ]
+      }
+    ],
+    "cross_workstream_dependencies": [
+      {
+        "from": "01",
+        "to": "02",
+        "reason": "Arquitetura tecnológica depende da definição estratégica."
+      },
+      {
+        "from": "02",
+        "to": "03",
+        "reason": "PoPA depende de camadas e fluxos."
+      },
+      {
+        "from": "02",
+        "to": "07",
+        "reason": "Compliance depende da arquitetura técnica."
+      },
+      {
+        "from": "04",
+        "to": "07",
+        "reason": "Tokenomics aciona validações regulatórias."
+      },
+      {
+        "from": "05",
+        "to": "06",
+        "reason": "UX depende da lógica de comportamento."
+      },
+      {
+        "from": "08",
+        "to": "09",
+        "reason": "Projeção depende da monetização."
+      },
+      {
+        "from": "04",
+        "to": "13",
+        "reason": "Simulação depende das regras prudenciais."
+      },
+      {
+        "from": "11",
+        "to": "16",
+        "reason": "Pitch depende do GTM."
+      },
+      {
+        "from": "13",
+        "to": "17",
+        "reason": "Consolidação acadêmica depende da simulação."
+      },
+      {
+        "from": "03",
+        "to": "06",
+        "reason": "UX operacional depende da especificação do PoPA."
+      }
+    ],
+    "program_milestone_map": [
+      {
+        "program_milestone_id": "PM-01",
+        "name": "Baseline Estratégica e Técnica",
+        "includes_blocks": [
+          "01",
+          "02",
+          "03"
+        ],
+        "target_gate": "G1"
+      },
+      {
+        "program_milestone_id": "PM-02",
+        "name": "Viabilidade Regulatória e Econômica",
+        "includes_blocks": [
+          "04",
+          "07",
+          "08",
+          "09",
+          "10",
+          "15"
+        ],
+        "target_gate": "G2"
+      },
+      {
+        "program_milestone_id": "PM-03",
+        "name": "Escopo MVP e Prontidão de Piloto",
+        "includes_blocks": [
+          "05",
+          "06",
+          "11",
+          "12"
+        ],
+        "target_gate": "G3"
+      },
+      {
+        "program_milestone_id": "PM-04",
+        "name": "Pilot Readiness Integrado",
+        "includes_blocks": [
+          "03",
+          "06",
+          "07",
+          "11",
+          "12"
+        ],
+        "target_gate": "G4"
+      },
+      {
+        "program_milestone_id": "PM-05",
+        "name": "Readiness Científico e Institucional",
+        "includes_blocks": [
+          "13",
+          "14",
+          "16",
+          "17"
+        ],
+        "target_gate": "G5"
+      }
+    ],
+    "definition_of_done": {
+      "program_level": [
+        "todo bloco possui owner",
+        "critérios de aceite verificáveis",
+        "dependências mapeadas",
+        "gates com entrada e saída",
+        "backlog por trilhas paralelas"
+      ],
+      "item_level": [
+        "entregáveis produzidos",
+        "aceite revisado",
+        "impactos avaliados",
+        "riscos registrados"
+      ]
+    },
+    "pre_scaleup_constraints": {
+      "compliance_track_status": "mandatory_precondition",
+      "hard_gate": "Regulatory Readiness Before Commercial Scale-Up",
+      "required_evidence": [
+        "parecer jurídico do token",
+        "política LGPD operacional",
+        "modelo institucional mínimo"
+      ]
+    },
+    "prudential_execution_constraints": {
+      "status": "mandatory_core_execution",
+      "required_modules": [
+        "ACB-01",
+        "ACB-02",
+        "ACB-03",
+        "ACB-04"
+      ],
+      "exit_condition": "Prudential Engine Ready"
+    },
+    "interface_product_constraints": {
+      "status": "mandatory_parallel_execution",
+      "required_fronts": [
+        "IF-01",
+        "IF-02",
+        "IF-03"
+      ],
+      "exit_condition": "Three-Front Product Readiness"
+    },
+    "operations_and_risk_constraints": {
+      "status": "mandatory_continuous_control_layer",
+      "required_routines": [
+        "OCR-01",
+        "OCR-02",
+        "OCR-03",
+        "OCR-04"
+      ],
+      "exit_condition": "Continuous Operations and Risk Layer Active"
+    },
+    "wiaas_monetization_constraints": {
+      "status": "mandatory_growth_layer",
+      "required_modules": [
+        "MON-01",
+        "MON-02",
+        "MON-03"
+      ],
+      "exit_condition": "WIaaS-Centric Monetization Readiness"
+    },
+    "executive_program_constraints": {
+      "status": "active",
+      "priority": "critical",
+      "required_directives": [
+        "EPD-01",
+        "EPD-02",
+        "EPD-03",
+        "EPD-04",
+        "EPD-05",
+        "EPD-06",
+        "EPD-07"
+      ],
+      "global_exit_condition": "Disciplined Program Execution Active"
+    }
+  }
+}

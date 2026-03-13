@@ -1,0 +1,36 @@
+{
+  "entities": {
+    "user": {
+      "attributes": ["user_id", "type (B2C|cooperativa|B2B|B2G)", "wallet_address", "reputation_score", "streak_count", "badge_level", "created_at"],
+      "privacy": "Dados pessoais anonimizados antes de Layer Blockchain"
+    },
+    "popa_event": {
+      "attributes": ["event_id", "user_id", "cooperativa_id", "ecoponto_id", "timestamp", "weight_kg", "volume_estimate", "material_type", "cv_classification", "geo_lat", "geo_lng", "trust_score", "validated", "token_emission"],
+      "lifecycle": "Captura IoT → Validação IA → Registro Blockchain → Emissão Token"
+    },
+    "token_transaction": {
+      "attributes": ["tx_id", "from_address", "to_address", "amount_vrd", "type (mint|burn|redeem|utility_spend)", "popa_event_id", "block_hash", "timestamp"],
+      "immutability": "Registrado em Layer 2"
+    },
+    "contract_b2b": {
+      "attributes": ["contract_id", "company_id", "type (SaaS|CRE|DaaS)", "annual_value_brl", "tonnage_committed", "start_date", "end_date", "nrr_rate"],
+      "revenue": "Gera I_t (inflow fiduciário)"
+    },
+    "cooperativa": {
+      "attributes": ["coop_id", "name", "location", "hardware_kit_id", "reputation_score", "daily_volume_avg", "daily_redemption_cap", "status (active|suspended)"],
+      "role": "Nó Validador do protocolo PoPA"
+    },
+    "protocol_state": {
+      "attributes": ["date", "R_t", "T_t", "V_t", "CCS_t", "LCR_t", "E_t", "B_t", "I_t", "Out_t", "Q_t", "state (A|B|C)", "cvs_rolling"],
+      "frequency": "Diário",
+      "on_chain": true
+    }
+  },
+
+  "flows": {
+    "physical_to_digital": "Evento físico (descarte) → IoT captura → IA valida (PoPA) → Blockchain registra → Token emitido",
+    "B2B_to_ecosystem": "Contrato B2B → Pagamento mensal (I_t) → Reserva fiduciária (R_t) → Sustenta lastro do token",
+    "token_lifecycle": "Mint (via PoPA) → Circulação (wallet) → Burn (via utility_spend ou esterilização)",
+    "compliance_pipeline": "Dados validados → Agregação WIaaS → Relatório ESG auditável → Exportação B2B/B2G"
+  }
+}

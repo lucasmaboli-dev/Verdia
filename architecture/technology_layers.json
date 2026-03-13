@@ -1,0 +1,112 @@
+{
+  "layer_iot": {
+    "name": "Camada de Captação Física",
+    "purpose": "Transformar eventos físicos em dados digitais estruturados",
+    "components": {
+      "balancas_inteligentes": {
+        "tipo": "Balança de carga com módulo IoT",
+        "conectividade": "Chip multioperadora (4G/5G nativo)",
+        "atualizacao": "Over-the-Air (OTA)",
+        "modelo": "Hardware as a Service (HaaS) — plug-and-play"
+      },
+      "sensores_volumetricos": {
+        "localizacao": "Ecopontos",
+        "funcao": "Medição de volume para validação cruzada com peso"
+      },
+      "smartphone_usuario": {
+        "funcoes": ["Leitura QR Code", "Geolocalização criptografada", "Captura fotográfica"],
+        "modo": "Offline-first com cache local criptografado e upload assíncrono"
+      },
+      "cameras_cv": {
+        "funcao": "Visão computacional para classificação de materiais",
+        "localizacao": "Esteiras de cooperativas e/ou via fotos dos usuários"
+      }
+    },
+    "data_output": {
+      "variaveis": ["peso", "volume", "tipo_material", "localizacao", "timestamp", "identificacao_ator"],
+      "formato": "Pacote de dados rastreável estruturado"
+    },
+    "redundancia": {
+      "modo_offline": "Cache local criptografado com upload posterior",
+      "sla_processamento": "< 24h",
+      "principio": "Falha tecnológica nunca paralisa renda do catador"
+    }
+  },
+
+  "layer_ai": {
+    "name": "Camada de Inteligência Artificial",
+    "purpose": "Processar, validar, anonimizar e gerar inteligência preditiva",
+    "modulos": {
+      "computer_vision": {
+        "funcao": "Classificação de materiais (ex: distinguir PET de PEAD)",
+        "aplicacao_antifraude": "Análise volumétrica vs. peso (densidade) para impedir materiais adulterantes"
+      },
+      "inferencia_bayesiana": {
+        "funcao": "Trust Score dinâmico para validação PoPA",
+        "formula": "P(Validação|Dados) ∝ P(Dados|Ação Real) × P(Ação Real)",
+        "aprendizado": "Contínuo — modelo aprende com dados históricos"
+      },
+      "modelos_preditivos": {
+        "funcao": "Previsão de fluxos de resíduos, sazonalidades e gargalos logísticos",
+        "output": "Mapas de calor, alertas de metas PNRS, otimização de rotas"
+      },
+      "anonimizacao": {
+        "funcao": "Remoção de dados pessoais identificáveis antes da camada blockchain",
+        "conformidade": "LGPD / GDPR",
+        "principio": "Privacy by design"
+      }
+    },
+    "trust_score": {
+      "formula": "Trust = (w1 × S_peso) + (w2 × V_espectro) + (w3 × G_loc) + (w4 × R_user)",
+      "normalizacao": "Z-score: S' = (S - μ) / σ",
+      "evolucao_reputacional": "R_user,t+1 = R_user,t + γ(Score_real - Score_esperado)",
+      "threshold": "Trust ≥ τ para validação do bloco"
+    }
+  },
+
+  "layer_blockchain": {
+    "name": "Camada de Confiança e Liquidação",
+    "purpose": "Imutabilidade, rastreabilidade, smart contracts e liquidação automática",
+    "infrastructure": {
+      "tipo": "Layer 2",
+      "candidatos": ["Polygon", "Arbitrum"],
+      "criterios": {
+        "custo_por_transacao": "< US$0,01",
+        "throughput_tps": "Elevado",
+        "eficiencia_energetica": "Alta",
+        "finalidade": "Rápida"
+      }
+    },
+    "funcoes_core": {
+      "registro_imutavel": "Cada descarte validado vira bloco permanente — Certidão de Nascimento do resíduo",
+      "smart_contracts": "Autoexecutáveis: Se (Peso + Validação IA) = OK → Liberação tokens",
+      "anti_double_spending": "Impede venda duplicada de certificados ambientais",
+      "timestamping": "Distribuído para auditoria contínua"
+    },
+    "distincao": "AWS armazena fatos. Blockchain congela fatos."
+  },
+
+  "layer_application": {
+    "name": "Camada de Aplicação e APIs",
+    "purpose": "Interface entre ecossistema interno e stakeholders externos",
+    "components": {
+      "api": "RESTful/GraphQL para integração com ERPs corporativos",
+      "sdk": "Para parceiros de recompensa",
+      "webhooks": "Notificações em tempo real",
+      "api_dados_abertos": "Dados anonimizados para pesquisadores e governos",
+      "dashboard_wiaas": "Painel executivo para B2B/B2G"
+    },
+    "architecture_pattern": "Microserviços cloud-native com event-driven architecture",
+    "data_infrastructure": "Data Lake centralizado com pipelines ETL"
+  },
+
+  "layer_frontend": {
+    "name": "Camada de Experiência do Usuário",
+    "principle": "Complexidade no backend. Simplicidade no frontend.",
+    "interfaces": {
+      "B2C": "Motor Emocional — gamificação, recompensas, metáforas concretas",
+      "cooperativas": "Motor de Confiança — operacional, extrato, score reputacional",
+      "B2B_B2G": "Motor de Governança — dashboards, mapas, compliance preditivo"
+    }
+  }
+}

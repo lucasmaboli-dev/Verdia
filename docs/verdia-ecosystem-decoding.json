@@ -1,0 +1,606 @@
+{
+  "verdia_ecosystem_decoding": {
+    "pre_scaleup_compliance_track": {
+      "name": "Compliance by Design Before Scale-Up",
+      "status": "mandatory_precondition",
+      "priority": "high",
+      "strategic_rationale": "A trilha de compliance by design deve ser concluída antes do escala-up comercial, pois risco regulatório não resolvido compromete expansão B2B, B2G, integrações, captação e segurança jurídica.",
+      "blocking_rule": "Sem fechamento mínimo da trilha jurídico-regulatória, o crescimento comercial deve ser tratado como bloqueado ou restrito a sandbox.",
+      "scale_up_gate": {
+        "gate_name": "Regulatory Readiness Before Commercial Scale-Up",
+        "gate_type": "hard_gate",
+        "gate_condition": "Somente autorizar escala comercial ampla após parecer jurídico do token, política LGPD operacional e modelo institucional mínimo."
+      },
+      "priority_items": [
+        {
+          "item_id": "CBD-01",
+          "name": "Legal Opinion on VRD Design",
+          "priority": "high",
+          "classification": "regulatory_legal",
+          "objective": "Obter parecer jurídico do $VRD como utility token fechado.",
+          "scope": {
+            "token_characteristics_to_validate": [
+              "utility token fechado",
+              "soulbound ou semi-restrito",
+              "ausência de promessa de valorização",
+              "ausência de vínculo societário",
+              "restrição de convertibilidade",
+              "restrição de transferibilidade",
+              "resgate fiduciário restrito"
+            ]
+          },
+          "blocking_if_missing": true
+        },
+        {
+          "item_id": "CBD-02",
+          "name": "Operational LGPD Policy",
+          "priority": "high",
+          "classification": "privacy_and_data_governance",
+          "objective": "Definir política LGPD operacional com anonimização robusta antes de blockchain.",
+          "scope": {
+            "architectural_rule": "Nenhum dado pessoal identificável deve ser registrado em blockchain pública."
+          },
+          "blocking_if_missing": true
+        },
+        {
+          "item_id": "CBD-03",
+          "name": "Institutional Model Definition",
+          "priority": "high",
+          "classification": "institutional_governance",
+          "objective": "Definir modelo institucional mínimo separando operação, lastro, governança e auditoria.",
+          "blocking_if_missing": true
+        }
+      ],
+      "recommended_sequence": [
+        {
+          "order": 1,
+          "action": "parecer jurídico do $VRD"
+        },
+        {
+          "order": 2,
+          "action": "política LGPD operacional"
+        },
+        {
+          "order": 3,
+          "action": "modelo institucional mínimo"
+        },
+        {
+          "order": 4,
+          "action": "revisão integrada de readiness regulatória"
+        }
+      ],
+      "exit_condition": {
+        "name": "Minimum Regulatory Readiness",
+        "criteria": [
+          "parecer jurídico emitido",
+          "política LGPD aprovada",
+          "modelo institucional definido",
+          "riscos residuais classificados",
+          "restrições comerciais temporárias documentadas"
+        ]
+      }
+    },
+    "algorithmic_central_bank_execution_track": {
+      "name": "Algorithmic Central Bank Layer",
+      "status": "mandatory_core_execution",
+      "priority": "high",
+      "strategic_rationale": "Camada de banco central algorítmico que protege o sistema em stress via regras programáveis de solvência, emissão, contração e liquidez.",
+      "prudential_modules": [
+        {
+          "module_id": "ACB-01",
+          "name": "Solvency and CCS Engine",
+          "objective": "Codificar e validar lógica de solvência prudencial.",
+          "core_formulas": {
+            "basic": "R_t >= T_t * V_t",
+            "coverage": "CCS_t = R_t / (T_t * V_t)",
+            "refined": "CCS_t = R_t / E(Resgates_t)",
+            "buffer": "CCS_t >= 1 + delta"
+          }
+        },
+        {
+          "module_id": "ACB-02",
+          "name": "State-Based Emission Controller",
+          "objective": "Codificar emissão condicionada ao estado prudencial.",
+          "core_formulas": {
+            "emission": "E_t = kappa * P_t_eff * g(CCS_t)",
+            "production": "P_t_eff = (1 - phi_t) * P_t"
+          },
+          "state_machine": {
+            "surplus": {
+              "g": 1
+            },
+            "alert": {
+              "g": "eta"
+            },
+            "crisis": {
+              "g": 0
+            }
+          }
+        },
+        {
+          "module_id": "ACB-03",
+          "name": "Burn and Hysteresis Controller",
+          "objective": "Codificar contração monetária e amortecimento de regime.",
+          "core_formulas": {
+            "burn": "B_t = beta_t * (I_t / V_t) + U_t",
+            "hysteresis_entry": "delta_down",
+            "hysteresis_exit": "delta_up"
+          },
+          "state_sensitive_burn": {
+            "surplus": "beta_base",
+            "alert": "2*beta_base",
+            "crisis": "beta_max"
+          }
+        },
+        {
+          "module_id": "ACB-04",
+          "name": "Liquidity Coverage and Redemption Limits",
+          "objective": "Codificar lógica de liquidez e limites de resgate.",
+          "core_formulas": {
+            "liquidity": "L_t = rho * R_t",
+            "redemption": "X_t = min(W_t + Q_t, L_t / V_t)",
+            "outflow": "Out_t = X_t * V_t",
+            "queue": "Q_t+1 = Q_t + W_t - X_t",
+            "lcr": "LCR_t = L_t / Out_t_h"
+          }
+        }
+      ],
+      "integration_logic": {
+        "execution_order": [
+          "calcular solvência e CCS",
+          "classificar estado prudencial",
+          "aplicar regra de emissão",
+          "aplicar burn e histerese",
+          "calcular LCR e limites de resgate",
+          "atualizar estoque de tokens, reservas, fila e saídas"
+        ],
+        "ledger_update": {
+          "tokens": "T_t+1 = T_t + E_t - B_t",
+          "reserves": "R_t+1 = R_t + I_t - Out_t",
+          "queue": "Q_t+1 = Q_t + W_t - X_t"
+        }
+      },
+      "stress_testing_layer": {
+        "minimum_scenarios": [
+          {
+            "scenario_id": "ST-01",
+            "name": "normal_surplus"
+          },
+          {
+            "scenario_id": "ST-02",
+            "name": "buffer_erosion"
+          },
+          {
+            "scenario_id": "ST-03",
+            "name": "crisis_trigger"
+          },
+          {
+            "scenario_id": "ST-04",
+            "name": "redemption_run"
+          },
+          {
+            "scenario_id": "ST-05",
+            "name": "threshold_noise"
+          }
+        ]
+      },
+      "exit_condition": {
+        "name": "Prudential Engine Ready",
+        "criteria": [
+          "módulos implementados",
+          "testes unitários aprovados",
+          "testes integração aprovados",
+          "stress executados",
+          "métricas observáveis"
+        ]
+      }
+    },
+    "interface_product_execution_track": {
+      "name": "Product by Interface",
+      "status": "mandatory_parallel_execution",
+      "priority": "high",
+      "design_principle": "3 fronts, 3 objetivos: engajamento B2C, confiabilidade cooperativas, retenção B2B/B2G.",
+      "fronts": [
+        {
+          "front_id": "IF-01",
+          "name": "B2C Interface",
+          "target": "familias_B2C",
+          "primary_objective": "engagement",
+          "core_requirements": {
+            "onboarding": "< 3 minutes",
+            "reward_feedback": "< 60 seconds"
+          },
+          "success_metrics": [
+            {
+              "metric": "dau_mau",
+              "target": "> 30%"
+            },
+            {
+              "metric": "second_action_interval",
+              "target": "< 14 days"
+            }
+          ]
+        },
+        {
+          "front_id": "IF-02",
+          "name": "Cooperatives Interface",
+          "target": "cooperativas_catadores",
+          "primary_objective": "reliability",
+          "core_requirements": {
+            "operational_panel": "mandatory",
+            "liquidation_time": "< 24 hours"
+          },
+          "success_metrics": [
+            {
+              "metric": "average_liquidation_time",
+              "target": "< 24 hours"
+            },
+            {
+              "metric": "popa_validation_visibility",
+              "target": "100%"
+            }
+          ]
+        },
+        {
+          "front_id": "IF-03",
+          "name": "B2B/B2G Interface",
+          "target": "empresas_B2B_e_governo_B2G",
+          "primary_objective": "retention_and_expansion",
+          "core_requirements": {
+            "risk_dashboard": "mandatory",
+            "compliance_dashboard": "mandatory"
+          },
+          "success_metrics": [
+            {
+              "metric": "monthly_dashboard_usage",
+              "target": "> 80%"
+            }
+          ]
+        }
+      ],
+      "exit_condition": {
+        "name": "Three-Front Product Readiness",
+        "criteria": [
+          "B2C com onboarding <3min e feedback <60s",
+          "cooperativas com painel e liquidação <24h",
+          "B2B/B2G com dashboard de risco e compliance"
+        ]
+      }
+    },
+    "operations_and_risk_continuous_system": {
+      "name": "Operations and Risk as a Continuous System",
+      "status": "mandatory_continuous_control_layer",
+      "priority": "high",
+      "continuous_control_routines": [
+        {
+          "routine_id": "OCR-01",
+          "name": "Technical Smart Contract Audit",
+          "classification": "technical_assurance",
+          "cadence": {
+            "baseline": "annual",
+            "triggered": [
+              "antes de deploy",
+              "após alteração de regras",
+              "após achado crítico"
+            ]
+          },
+          "blocking_if_missing": true
+        },
+        {
+          "routine_id": "OCR-02",
+          "name": "Sample-Based Operational Audit",
+          "classification": "operational_assurance",
+          "cadence": {
+            "baseline": "quarterly",
+            "triggered": [
+              "desvio anormal",
+              "liquidação fora SLA"
+            ]
+          },
+          "sampling_logic": "risk_weighted_sampling"
+        },
+        {
+          "routine_id": "OCR-03",
+          "name": "Physical Oracle Anti-Fraud System",
+          "classification": "anti_fraud_control",
+          "cadence": "continuous_monitoring",
+          "control_mechanisms": [
+            "trust_score multimodal",
+            "detecção anomalias",
+            "revisão manual por exceção",
+            "score reputacional evolutivo",
+            "bloqueio de nó suspeito"
+          ],
+          "blocking_if_missing": true
+        },
+        {
+          "routine_id": "OCR-04",
+          "name": "Adoption and Macroeconomic Risk Monitoring",
+          "classification": "business_and_systemic_risk",
+          "cadence": {
+            "baseline": "monthly",
+            "triggered": [
+              "queda NRR",
+              "queda engajamento",
+              "pressão resgates",
+              "mudança regulatória"
+            ]
+          }
+        }
+      ],
+      "governance_model": {
+        "review_forum": {
+          "name": "Operational Resilience Committee",
+          "cadence": "monthly",
+          "participants": [
+            "program_manager",
+            "security_lead",
+            "operations_field_lead",
+            "data_ai_lead",
+            "finance_strategy_lead",
+            "compliance_legal_lead",
+            "product_ux_lead"
+          ]
+        }
+      },
+      "incident_and_escalation_logic": {
+        "severity_levels": [
+          {
+            "level": "S1",
+            "meaning": "risco crítico prudencial/regulatório"
+          },
+          {
+            "level": "S2",
+            "meaning": "risco alto operacional"
+          },
+          {
+            "level": "S3",
+            "meaning": "desvio moderado"
+          },
+          {
+            "level": "S4",
+            "meaning": "achado baixo/preventivo"
+          }
+        ]
+      },
+      "exit_condition": {
+        "name": "Continuous Operations and Risk Layer Active",
+        "criteria": [
+          "rotinas ativas com donos",
+          "métricas publicadas",
+          "comitê operacional",
+          "escalonamento definido"
+        ]
+      }
+    },
+    "wiaas_core_monetization_scale_track": {
+      "name": "WIaaS-Centric Monetization Scale Track",
+      "status": "mandatory_growth_layer",
+      "priority": "high",
+      "design_principle": "Receita recorrente B2B/B2G como core; DaaS e ativos ambientais como complementares.",
+      "revenue_architecture": {
+        "layers": [
+          {
+            "layer_id": "REV-01",
+            "name": "WIaaS Core",
+            "type": "recurring_b2b_b2g",
+            "position": "core"
+          },
+          {
+            "layer_id": "REV-02",
+            "name": "DaaS Complementary",
+            "type": "data_monetization",
+            "position": "complementary"
+          },
+          {
+            "layer_id": "REV-03",
+            "name": "Environmental Assets",
+            "type": "transactional_take_rate",
+            "position": "complementary"
+          }
+        ],
+        "guardrail": "WIaaS deve permanecer como principal motor de recorrência e retenção."
+      },
+      "commercial_execution_modules": [
+        {
+          "module_id": "MON-01",
+          "name": "Core Commercial Prioritization",
+          "priority": "high"
+        },
+        {
+          "module_id": "MON-02",
+          "name": "Complementary Monetization Layering",
+          "priority": "high"
+        },
+        {
+          "module_id": "MON-03",
+          "name": "Unit Economics and Financial Trigger Monitoring",
+          "priority": "high",
+          "tracked_metrics": {
+            "recurring": [
+              "MRR",
+              "ARR",
+              "revenue_mix",
+              "NRR",
+              "gross_margin"
+            ],
+            "commercial": [
+              "CAC",
+              "payback",
+              "sales_cycle",
+              "pipeline",
+              "expansion"
+            ],
+            "unit_economics": [
+              "contribution_margin",
+              "LTV",
+              "LTV_CAC",
+              "cost_to_serve"
+            ],
+            "capital": [
+              "runway",
+              "burn_multiple",
+              "breakeven_progress",
+              "capital_need_timing"
+            ]
+          }
+        }
+      ],
+      "exit_condition": {
+        "name": "WIaaS-Centric Monetization Readiness",
+        "criteria": [
+          "estratégia prioriza receita recorrente",
+          "DaaS e ativos como complementares",
+          "painel unit economics ativo",
+          "gatilhos breakeven definidos",
+          "gatilhos captação definidos"
+        ]
+      }
+    },
+    "executive_program_directives": {
+      "name": "Executive Program Directives",
+      "status": "active",
+      "priority": "critical",
+      "directive_set": [
+        {
+          "directive_id": "EPD-01",
+          "name": "Execute by Gates, Not by Isolated Tasks",
+          "classification": "program_governance",
+          "instruction": "Executar programa por gates G0 a G5."
+        },
+        {
+          "directive_id": "EPD-02",
+          "name": "Treat Regulatory Readiness as a Real Scale Blocker",
+          "classification": "regulatory_governance",
+          "instruction": "Tratar prontidão regulatória como hard gate antes de escala.",
+          "pre_scale_conditions": [
+            "parecer jurídico do token",
+            "política LGPD operacional",
+            "modelo institucional mínimo"
+          ]
+        },
+        {
+          "directive_id": "EPD-03",
+          "name": "Implement the Prudential Engine as the Core of Economic Trust",
+          "classification": "tokenomics_engineering",
+          "instruction": "Implementar ACB-01 a ACB-04 antes de crescimento agressivo."
+        },
+        {
+          "directive_id": "EPD-04",
+          "name": "Build Product by Interface with Distinct Exit Criteria",
+          "classification": "product_execution",
+          "instruction": "Construir produto por interface com três frentes separadas."
+        },
+        {
+          "directive_id": "EPD-05",
+          "name": "Operate Risk and Quality as a Continuous Routine",
+          "classification": "operational_resilience",
+          "instruction": "Instituir OCR-01 a OCR-04 como rotina contínua."
+        },
+        {
+          "directive_id": "EPD-06",
+          "name": "Scale Monetization with WIaaS-First Discipline",
+          "classification": "commercial_discipline",
+          "instruction": "Escalar monetização mantendo WIaaS como núcleo."
+        },
+        {
+          "directive_id": "EPD-07",
+          "name": "Use Simulation as a Robustness Gate",
+          "classification": "scientific_validation",
+          "instruction": "Rodar simulação como gate de robustez, não apêndice acadêmico."
+        }
+      ],
+      "execution_order": [
+        {
+          "phase": 1,
+          "focus": "gates_and_regulatory_blocking",
+          "directives": [
+            "EPD-01",
+            "EPD-02"
+          ]
+        },
+        {
+          "phase": 2,
+          "focus": "prudential_core_and_product_fronts",
+          "directives": [
+            "EPD-03",
+            "EPD-04"
+          ]
+        },
+        {
+          "phase": 3,
+          "focus": "continuous_risk_and_monetization",
+          "directives": [
+            "EPD-05",
+            "EPD-06"
+          ]
+        },
+        {
+          "phase": 4,
+          "focus": "simulation_as_robustness_gate",
+          "directives": [
+            "EPD-07"
+          ]
+        }
+      ],
+      "global_exit_condition": {
+        "name": "Disciplined Program Execution Active",
+        "criteria": [
+          "programa por gates G0-G5",
+          "prontidão regulatória como bloqueio",
+          "motor prudencial implementado",
+          "produto por três interfaces",
+          "rotinas OCR operando",
+          "monetização WIaaS-first",
+          "simulação como gate de robustez"
+        ]
+      }
+    },
+    "consistency_and_governance_fixes": {
+      "status": "applied",
+      "items": [
+        {
+          "id": "FIX-01",
+          "topic": "contradicoes_economico_financeiras",
+          "resolution": "Reforçada coerência WIaaS-first com guardrails de mix de receita."
+        },
+        {
+          "id": "FIX-02",
+          "topic": "lacunas_pmo_backlog",
+          "resolution": "Dependência cross-workstream 03->06 adicionada."
+        },
+        {
+          "id": "FIX-03",
+          "topic": "governanca_operacional",
+          "resolution": "product_ux_lead incluído no Operational Resilience Committee."
+        },
+        {
+          "id": "FIX-04",
+          "topic": "taxonomia_e_formulas",
+          "resolution": "IDs de atores unificados; fórmula redemption clarificada."
+        },
+        {
+          "id": "FIX-05",
+          "topic": "adequacao_regulatoria_cvm",
+          "resolution": "Diretriz comunicação regulatória e extensão foco legal adicionadas."
+        }
+      ]
+    },
+    "simulation_and_validation_architecture": {
+      "status": "active",
+      "source_of_truth": "docs/verdia-ecosystem-architect-profile.json::13_simulacao_computacional",
+      "purpose": "Base de validação de robustez para decisões pré-escala e gate G5.",
+      "minimum_scope": [
+        "hipóteses fechadas",
+        "cenários base/otimista/pessimista",
+        "métricas CCS/LCR/tempo em crise/CVaR"
+      ]
+    },
+    "stakeholder_taxonomy_bridge": {
+      "empresas_B2B_e_governo_B2G": [
+        "empresas_B2B",
+        "governo_B2G"
+      ]
+    }
+  }
+}

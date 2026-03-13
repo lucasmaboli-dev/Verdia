@@ -1,0 +1,1744 @@
+{
+  "repository_metadata": {
+    "repository_id": "verdia_master_repository_v4",
+    "title": "Verdia Master Repository v4",
+    "language": "pt-BR",
+    "schema_version": "verdia-architecture-schema-v4",
+    "status": "consolidated_post_audit",
+    "created_at_utc": "2026-03-09T00:24:03Z",
+    "purpose": "Consolidar arquitetura, achados da auditoria, parâmetros canônicos, especificação prudencial, simulação, tracks operacionais e backlog executivo sob um único source of truth válido em JSON.",
+    "supersedes": [
+      "architecture_repository_v1_1",
+      "verdia_ecosystem_decoding_v1",
+      "program_plan_v1_0",
+      "verdia_full_audit_report_v1_0"
+    ],
+    "design_rules": [
+      "single_valid_json_root",
+      "canonical_ids_and_internal_references",
+      "numeric_parameters_normalized",
+      "separation_between_conceptual_model_and_implementation_artifacts",
+      "explicit_traceability_between_architecture_prudential_simulation_and_backlog"
+    ]
+  },
+  "source_of_truth": {
+    "canonical_document_id": "verdia_master_repository_v4",
+    "authoritative_domains": {
+      "architecture": "master_repository.sections",
+      "prudential": "prudential_layer",
+      "simulation": "simulation_layer",
+      "program_execution": "executive_program_layer",
+      "audit_and_remediation": "audit_layer"
+    },
+    "reference_protocol": {
+      "internal_uri_scheme": "sot://verdia_master_repository_v4/{path}",
+      "example": "sot://verdia_master_repository_v4/prudential_layer/canonical_metrics/ccs_base"
+    },
+    "artifact_registry": {
+      "audit_report_json": {
+        "artifact_id": "ART-01",
+        "path": "verdia_audit_bundle/verdia_audit_report.json",
+        "role": "detailed_audit_evidence"
+      },
+      "prudential_engine_python": {
+        "artifact_id": "ART-02",
+        "path": "simulation/protocol.py",
+        "role": "reference_implementation_of_prudential_logic"
+      },
+      "simulation_python": {
+        "artifact_id": "ART-03",
+        "path": "simulation/monte_carlo.py",
+        "role": "reference_simulation_engine"
+      },
+      "smart_contract_solidity": {
+        "artifact_id": "ART-04",
+        "path": "contracts/daily_settlement.pseudo",
+        "role": "reference_smart_contract_architecture"
+      }
+    },
+    "source_precedence_order": [
+      "repository_metadata",
+      "canonical_parameters",
+      "master_repository.sections",
+      "prudential_layer",
+      "simulation_layer",
+      "executive_program_layer",
+      "artifact_registry"
+    ],
+    "consumption_rules": [
+      "Sempre consultar canonical_parameters antes de codificar ou simular.",
+      "Sempre usar internal_uri_scheme para referências cruzadas em agentes e pipelines.",
+      "Nenhum consumidor deve usar os JSONs legados concatenados como fonte primária.",
+      "Se houver conflito entre texto narrativo e parâmetro numérico, prevalece canonical_parameters."
+    ]
+  },
+  "audit_layer": {
+    "executive_status": "critical_rework_partially_remediated_via_v4",
+    "hard_blockers_before_scale": [
+      "parecer_juridico_preliminar_do_vrd",
+      "lgpd_operacional_com_fluxos_bases_legais_e_fronteira_onchain_offchain",
+      "modelo_institucional_minimo_com_reserva_segregada",
+      "definicao_canonica_de_ccs_ccr_lcr",
+      "motor_prudencial_com_mint_cap_e_queue_policy",
+      "payload_minimo_onchain_do_popa_com_idempotencia_e_replay_protection",
+      "contingencia_para_chain_outage_eventos_duplicados_e_sync_offline",
+      "simulacao_com_relogio_mestre_diario_e_agregacao_mensal_formal"
+    ],
+    "critical_findings_consolidated": [
+      {
+        "finding_id": "AF-01",
+        "severity": "critical",
+        "topic": "json_root_integrity",
+        "status_in_v4": "resolved",
+        "legacy_problem": "Três objetos JSON independentes concatenados impediam parsing canônico.",
+        "v4_resolution": "Tudo consolidado sob raiz única com schema_version próprio."
+      },
+      {
+        "finding_id": "AF-02",
+        "severity": "critical",
+        "topic": "prudential_metric_collision",
+        "status_in_v4": "resolved",
+        "legacy_problem": "CCS era usado ao mesmo tempo como cobertura do supply e cobertura de resgates esperados.",
+        "v4_resolution": "Separação formal entre ccs_base e ccr_expected_redemption."
+      },
+      {
+        "finding_id": "AF-03",
+        "severity": "critical",
+        "topic": "reserve_accounting_gap",
+        "status_in_v4": "resolved",
+        "legacy_problem": "Reserva fiduciária, tesouraria operacional e buffers restritos não estavam segregados.",
+        "v4_resolution": "Buckets de reserva definidos em canonical_parameters e prudential_layer."
+      },
+      {
+        "finding_id": "AF-04",
+        "severity": "critical",
+        "topic": "mint_without_budget",
+        "status_in_v4": "resolved",
+        "legacy_problem": "Modelo permitia emissão sem explicitar mint budget lastreado.",
+        "v4_resolution": "Mint cap canônico introduzido e ligado ao motor prudencial."
+      },
+      {
+        "finding_id": "AF-05",
+        "severity": "high",
+        "topic": "popa_replay_and_idempotency",
+        "status_in_v4": "resolved",
+        "legacy_problem": "PoPA não especificava nonce, event_hash, replay protection e reconciliação offline-first.",
+        "v4_resolution": "Payload canônico mínimo e regras de sincronização definidos."
+      },
+      {
+        "finding_id": "AF-06",
+        "severity": "high",
+        "topic": "simulation_time_base",
+        "status_in_v4": "resolved",
+        "legacy_problem": "Mistura de dinâmica diária e mensal sem clock mestre formal.",
+        "v4_resolution": "Clock diário com agregação mensal explicitado em simulation_layer."
+      },
+      {
+        "finding_id": "AF-07",
+        "severity": "high",
+        "topic": "go_to_market_public_sector",
+        "status_in_v4": "partially_resolved",
+        "legacy_problem": "B2G subestimava procurement, sandbox institucional e ciclos públicos.",
+        "v4_resolution": "Constraints B2G incluídos no GTM e backlog; ainda depende de desenho contratual local."
+      },
+      {
+        "finding_id": "AF-08",
+        "severity": "high",
+        "topic": "regulatory_communications",
+        "status_in_v4": "resolved",
+        "legacy_problem": "Faltava política de linguagem comercial do token.",
+        "v4_resolution": "Guardrails explícitos de comunicação regulatória e gatilhos de revisão jurídica."
+      }
+    ],
+    "newly_identified_gaps_beyond_previous_audits": [
+      {
+        "gap_id": "NG-01",
+        "severity": "high",
+        "topic": "token_buyback_semantics",
+        "description": "Recompra/queima é semanticamente fraca para utility token fechado e intransferível; operacionalmente deve ser tratada como esterilização contábil ou burn de utilidade, não buyback de mercado."
+      },
+      {
+        "gap_id": "NG-02",
+        "severity": "high",
+        "topic": "ai_governance_and_model_drift",
+        "description": "Pesos do trust score, tau e versões de modelo exigem governança explícita, versionamento e rollback."
+      },
+      {
+        "gap_id": "NG-03",
+        "severity": "medium",
+        "topic": "service_level_contracts",
+        "description": "SLOs para validação PoPA, liquidação e dashboards ainda precisam ser contratualizados por interface."
+      },
+      {
+        "gap_id": "NG-04",
+        "severity": "medium",
+        "topic": "data_licensing_for_daas",
+        "description": "DaaS exige política de licenciamento, reidentificação proibida e regras de uso por cliente."
+      },
+      {
+        "gap_id": "NG-05",
+        "severity": "medium",
+        "topic": "event_correction_policy",
+        "description": "Correção de evento físico já ancorado deve ocorrer por evento compensatório, nunca por mutação destrutiva."
+      }
+    ],
+    "remediation_order": [
+      "regulatory_minimum_readiness",
+      "canonical_prudential_parameters_and_reserve_policy",
+      "popa_payload_and_offline_sync_controls",
+      "three_front_product_readiness",
+      "continuous_risk_routines",
+      "simulation_recalibration_and_G5_readiness"
+    ]
+  },
+  "canonical_parameters": {
+    "units": {
+      "currency": "BRL",
+      "token": "VRD",
+      "time_tick": "day",
+      "aggregation_window_month": 30,
+      "mass": "kg",
+      "volume": "liters"
+    },
+    "stakeholder_taxonomy": {
+      "platform_model": {
+        "type": "multilateral_platform",
+        "groups": [
+          "familias_B2C",
+          "cooperativas_catadores",
+          "empresas_B2B",
+          "governo_B2G"
+        ],
+        "paying_sides_primary": [
+          "empresas_B2B",
+          "governo_B2G"
+        ]
+      },
+      "interface_bridge": {
+        "B2B_B2G_interface_alias": [
+          "empresas_B2B",
+          "governo_B2G"
+        ]
+      }
+    },
+    "prudential": {
+      "delta": {
+        "value": 0.2,
+        "unit": "ratio",
+        "description": "buffer prudencial alvo acima do equilíbrio neutro"
+      },
+      "delta_down": {
+        "value": 0.18,
+        "unit": "ratio",
+        "description": "limiar de entrada em alerta"
+      },
+      "delta_up": {
+        "value": 0.22,
+        "unit": "ratio",
+        "description": "limiar de retorno a superávit"
+      },
+      "rho": {
+        "value": 0.7,
+        "unit": "ratio",
+        "description": "fração da reserva total alocada à liquidez executável"
+      },
+      "kappa": {
+        "value": 1.0,
+        "unit": "VRD_per_unit",
+        "description": "conversão base de produção efetiva em tokens",
+        "status": "calibration_required"
+      },
+      "eta": {
+        "value": 0.5,
+        "unit": "ratio",
+        "description": "gate de emissão no estado de alerta"
+      },
+      "beta_base": {
+        "value": 0.05,
+        "unit": "ratio",
+        "description": "intensidade base de esterilização/burn"
+      },
+      "beta_alert": {
+        "value": 0.1,
+        "unit": "ratio",
+        "description": "intensidade de burn em alerta"
+      },
+      "beta_max": {
+        "value": 0.3,
+        "unit": "ratio",
+        "description": "intensidade máxima em crise"
+      },
+      "omega": {
+        "value": 1.5,
+        "unit": "ratio",
+        "description": "multiplicador do teto diário de resgate"
+      },
+      "liquidation_value_brl": {
+        "value": 1.0,
+        "unit": "BRL_per_VRD",
+        "description": "valor de liquidação interno por token",
+        "status": "governance_parameter"
+      },
+      "lcr_normal_floor": {
+        "value": 1.0,
+        "unit": "ratio",
+        "description": "piso normal do LCR"
+      },
+      "lcr_stress_floor": {
+        "value": 0.8,
+        "unit": "ratio",
+        "description": "piso de stress do LCR"
+      },
+      "ema_window_days": {
+        "value": 30,
+        "unit": "days",
+        "description": "janela EMA da reserva"
+      },
+      "ema_lambda": {
+        "value": 0.064516,
+        "unit": "ratio",
+        "description": "lambda da EMA de 30 dias"
+      },
+      "reserve_haircut_brl": {
+        "value": 0.0,
+        "unit": "BRL",
+        "description": "haircut prudencial da reserva",
+        "status": "optional_future_control"
+      }
+    },
+    "reserve_accounting": {
+      "R_total": {
+        "description": "reserva fiduciária total controlada pelo ecossistema"
+      },
+      "R_redeemable": {
+        "description": "parcela da reserva elegível para honrar liquidação e resgates prudenciais",
+        "formula": "R_redeemable = R_total - R_operational - R_restricted - reserve_haircut_brl"
+      },
+      "R_operational": {
+        "description": "caixa operacional não elegível para resgate prudencial"
+      },
+      "R_restricted": {
+        "description": "fundos restritos, garantias ou buffers não utilizáveis para liquidação ordinária"
+      },
+      "policy_rule": "ccs_base e lcr devem usar R_redeemable ou L_available, não R_total bruto"
+    },
+    "canonical_metrics": {
+      "ccs_base": {
+        "formula": "CCS_base_t = R_redeemable_t / (T_circulating_eligible_t * V_t)",
+        "meaning": "cobertura da reserva sobre o passivo elegível em circulação",
+        "hard_floor": 1.0,
+        "target_floor": 1.2
+      },
+      "ccr_expected_redemption": {
+        "formula": "CCR_expected_t = R_redeemable_t / E(Redemptions_t:h)",
+        "meaning": "cobertura da reserva sobre resgates esperados no horizonte h"
+      },
+      "lcr_h": {
+        "formula": "LCR_t:h = L_available_t:h / Outflows_projected_t:h",
+        "meaning": "cobertura de liquidez disponível para o horizonte h",
+        "normal_floor": 1.0,
+        "stress_floor": 0.8
+      },
+      "mint_budget_tokens": {
+        "formula": "MintBudget_t = max((R_redeemable_t / V_t) - T_circulating_eligible_t, 0)",
+        "meaning": "cap máximo de mint coerente com a reserva elegível"
+      },
+      "effective_production": {
+        "formula": "P_eff_t = (1 - phi_t) * P_t",
+        "meaning": "produção física validada após desconto de fraude residual"
+      },
+      "cvs": {
+        "formula": "CVS = sigma(CCS_base_t) / mu(CCS_base_t)",
+        "meaning": "volatilidade sistêmica normalizada"
+      }
+    },
+    "popa": {
+      "trust_threshold_tau": {
+        "value": 0.75,
+        "unit": "score_0_1",
+        "description": "limiar de aprovação do evento PoPA",
+        "status": "calibration_required"
+      },
+      "trust_inputs": [
+        "S_peso",
+        "V_espectro",
+        "G_loc",
+        "R_user"
+      ],
+      "event_idempotency": {
+        "required": true,
+        "fields": [
+          "event_id",
+          "device_nonce",
+          "source_node_id",
+          "timestamp_utc"
+        ]
+      },
+      "onchain_payload_minimum": [
+        "event_hash",
+        "idempotency_key_hash",
+        "policy_version",
+        "model_version",
+        "timestamp_utc",
+        "validator_id_hash",
+        "reward_tokens",
+        "trust_band",
+        "status"
+      ],
+      "forbidden_onchain_data": [
+        "nome",
+        "cpf",
+        "telefone",
+        "endereco_exato",
+        "imagem_bruta",
+        "geolocalizacao_precisa_em_texto_claro"
+      ]
+    },
+    "simulation": {
+      "clock_master": {
+        "base_tick": "daily",
+        "enterprise_inflow_aggregation": "monthly",
+        "reporting_windows": [
+          "daily",
+          "monthly",
+          "rolling_30d"
+        ]
+      },
+      "scenario_defaults": {
+        "iterations": 10000,
+        "base_horizon_days": 365,
+        "pilot_horizon_days": 180
+      },
+      "risk_thresholds": {
+        "time_in_crisis_ratio_max": 0.01,
+        "q05_ccs_base_min": 1.0,
+        "q05_lcr_min": 0.8
+      }
+    },
+    "ux_service_levels": {
+      "b2c_onboarding_max_minutes": 3,
+      "b2c_reward_feedback_max_seconds": 60,
+      "coop_liquidation_max_hours": 24,
+      "b2b_b2g_dashboard_monthly_usage_min_ratio": 0.8
+    },
+    "commercial": {
+      "wiaas_revenue_share_target_min": 0.7,
+      "gross_margin_long_run_target_min": 0.75,
+      "ltv_cac_target_min": 5.0,
+      "cac_payback_target_max_months": 18
+    },
+    "regulatory_communications": {
+      "prohibited_claims": [
+        "promessa_de_valorizacao",
+        "linguagem_de_investimento",
+        "expectativa_de_retorno_financeiro",
+        "analogias_com_ativo_especulativo"
+      ],
+      "mandatory_review_triggers": [
+        "novo_material_comercial_sobre_token",
+        "campanha_publica_em_larga_escala",
+        "mudanca_de_transferibilidade_ou_convertibilidade",
+        "novo_mecanismo_de_resgate"
+      ]
+    }
+  },
+  "master_repository": {
+    "documento": {
+      "titulo": "Arquitetura do Ecossistema Verdia",
+      "subtitulo": "Infraestrutura Digital de Coordenação Regulatória Baseada em Dados Físicos Verificáveis",
+      "natureza": "Construção iterativa da arquitetura estratégica, tecnológica, econômica, comportamental e institucional da Verdia",
+      "one_liner": "Transformamos obrigação regulatória em ativo digital auditável."
+    },
+    "objetivo_geral": {
+      "descricao": "Desenvolver a arquitetura estratégica, tecnológica, econômica e comportamental da Verdia como plataforma multilateral WIaaS, com confiança institucional embutida em dados físicos verificáveis.",
+      "north_star": "converter obrigação regulatória em infraestrutura de dados auditáveis, receita recorrente e coordenação circular verificável"
+    },
+    "sections": {
+      "01_arquitetura_estrategica": {
+        "status": "canonicalized",
+        "summary": {
+          "core_definition": "A Verdia é infraestrutura algorítmica de coordenação regulatória baseada em dados físicos verificáveis.",
+          "platform_type": "plataforma multilateral com quatro grupos e dois lados pagantes principais",
+          "value_flywheel": "mais eventos físicos válidos -> mais inteligência preditiva -> mais contratos recorrentes -> mais reserva elegível -> mais incentivo e cobertura -> mais eventos válidos",
+          "value_transition": [
+            "commodity",
+            "DaaS",
+            "WIaaS"
+          ]
+        },
+        "moat_structure": [
+          "data_network_effects",
+          "switching_cost_institucional",
+          "infraestrutura_comportamental_hiperlocal"
+        ],
+        "direct_bindings": {
+          "prudential": [
+            "sot://verdia_master_repository_v4/prudential_layer/state_machine"
+          ],
+          "simulation": [
+            "sot://verdia_master_repository_v4/simulation_layer/hypotheses"
+          ],
+          "backlog_blocks": [
+            "01",
+            "08",
+            "11"
+          ]
+        }
+      },
+      "02_arquitetura_tecnologica": {
+        "status": "canonicalized",
+        "layers": {
+          "iot_capture": [
+            "balanca_inteligente",
+            "sensor_volumetrico",
+            "smartphone_offline_first",
+            "camera_vision"
+          ],
+          "ai_processing": [
+            "classificacao_materiais",
+            "fraud_detection",
+            "anonimizacao",
+            "forecasting",
+            "route_optimization"
+          ],
+          "blockchain_settlement": [
+            "anchoring",
+            "smart_contracts",
+            "immutability",
+            "double_spending_prevention"
+          ],
+          "application_api": [
+            "dashboard",
+            "integration_api",
+            "webhooks",
+            "partner_sdk"
+          ],
+          "frontend": [
+            "b2c",
+            "cooperativas",
+            "b2b_b2g"
+          ]
+        },
+        "hard_architecture_rules": [
+          "privacy_before_blockchain",
+          "offchain_processing_before_onchain_anchor",
+          "event_idempotency_required",
+          "graceful_degradation_for_offline_nodes"
+        ],
+        "direct_bindings": {
+          "prudential": [
+            "ART-02",
+            "ART-04"
+          ],
+          "simulation": [
+            "ART-03"
+          ],
+          "backlog_blocks": [
+            "02",
+            "03",
+            "06",
+            "07"
+          ]
+        }
+      },
+      "03_popa_protocol": {
+        "status": "strengthened",
+        "purpose": "eliminar dependência de oráculo único e reduzir fraude na ponte físico-digital",
+        "canonical_event_flow": [
+          "capture_event_offline_or_online",
+          "sign_event_with_device_nonce",
+          "run_multimodal_validation",
+          "assign_trust_score_and_reason_codes",
+          "approve_or_route_to_review",
+          "anchor_minimum_payload_onchain",
+          "emit_reward_or_queue_reward"
+        ],
+        "mandatory_controls": [
+          "event_hash",
+          "device_nonce",
+          "idempotency_key",
+          "replay_protection",
+          "duplicate_detection_on_sync",
+          "reason_code_for_rejection",
+          "compensating_event_policy"
+        ],
+        "direct_bindings": {
+          "prudential": [
+            "ACB-02"
+          ],
+          "simulation": [
+            "fraud_phi",
+            "validator_agents"
+          ],
+          "backlog_blocks": [
+            "03",
+            "06",
+            "12"
+          ]
+        }
+      },
+      "04_tokenomics": {
+        "status": "redefined_with_canonical_metrics",
+        "token_nature": {
+          "classification": "utility_token_fechado",
+          "transferability": "non_transferable_or_semi_restricted",
+          "convertibility": "utilidades_predefinidas_para_B2C; fiat_restrito_a_agentes_elegiveis",
+          "communication_guardrail": "sem promessa de valorização ou linguagem de investimento"
+        },
+        "prudential_principles": [
+          "ccs_base_controls_liability_coverage",
+          "ccr_expected_redemption_controls_expected_outflows",
+          "mint_budget_is_reserve_backed",
+          "burn_is_clamped_to_supply",
+          "redemption_queue_uses_opening_queue_convention"
+        ],
+        "state_machine_alias": [
+          "surplus",
+          "alert",
+          "crisis"
+        ],
+        "direct_bindings": {
+          "prudential": [
+            "sot://verdia_master_repository_v4/prudential_layer"
+          ],
+          "simulation": [
+            "sot://verdia_master_repository_v4/simulation_layer/scenario_library"
+          ],
+          "backlog_blocks": [
+            "04",
+            "07",
+            "09",
+            "15"
+          ]
+        }
+      },
+      "05_engenharia_comportamental": {
+        "status": "canonicalized",
+        "models": [
+          "fogg_behavior_model",
+          "nudge_architecture",
+          "identity_and_reputation_layer"
+        ],
+        "retention_stack": [
+          "recompensa_extrinseca",
+          "identidade_social",
+          "ativo_reputacional"
+        ],
+        "caution": "score ESG pessoal e integrações com terceiros só podem avançar após validação jurídica, ética e LGPD específica",
+        "direct_bindings": {
+          "simulation": [
+            "family_agents",
+            "retention_hypotheses"
+          ],
+          "backlog_blocks": [
+            "05",
+            "06",
+            "13"
+          ]
+        }
+      },
+      "06_ux_ui": {
+        "status": "three_front_model_locked",
+        "fronts": {
+          "B2C_familias": "engagement_and_habit",
+          "cooperativas_catadores": "operational_reliability",
+          "empresas_B2B_e_governo_B2G": "retention_risk_and_expansion"
+        },
+        "core_slos": {
+          "b2c_onboarding_max_minutes": 3,
+          "b2c_reward_feedback_max_seconds": 60,
+          "coop_liquidation_max_hours": 24
+        },
+        "direct_bindings": {
+          "prudential": [
+            "reward_queue_visibility",
+            "liquidation_visibility"
+          ],
+          "simulation": [
+            "second_action_interval",
+            "usage_metrics"
+          ],
+          "backlog_blocks": [
+            "06"
+          ]
+        }
+      },
+      "07_compliance_esg_by_design": {
+        "status": "expanded",
+        "pillars": {
+          "E": "prova criptográfica de desvio de aterro",
+          "S": "rastreabilidade da justiça circular",
+          "G": "governança algorítmica pré-auditável"
+        },
+        "minimum_controls": [
+          "pii_offchain_only",
+          "data_inventory",
+          "base_legal_mapping",
+          "audit_log",
+          "access_control_by_role",
+          "retention_and_disposal_policy"
+        ],
+        "direct_bindings": {
+          "prudential": [
+            "regulatory_scale_gate"
+          ],
+          "backlog_blocks": [
+            "07",
+            "12",
+            "15"
+          ]
+        }
+      },
+      "08_modelo_monetizacao": {
+        "status": "wiaas_first_locked",
+        "core": "WIaaS recurring revenue",
+        "complementary": [
+          "DaaS",
+          "ativos_ambientais"
+        ],
+        "guardrail": "receitas complementares não substituem o core WIaaS",
+        "direct_bindings": {
+          "simulation": [
+            "enterprise_agents",
+            "inflow_scenarios"
+          ],
+          "backlog_blocks": [
+            "08",
+            "09",
+            "11"
+          ]
+        }
+      },
+      "09_projecao_financeira_5_anos": {
+        "status": "scenario_based_internal_model",
+        "use_rule": "tratar projeções como hipóteses internas de planejamento, nunca como evidência factual externa",
+        "hard_guardrails": [
+          "breakeven_linked_to_core_revenue_and_margin",
+          "capital_raise_linked_to_readiness_and_scaling_need",
+          "revenue_mix_recalibration_if_core_share_drops"
+        ],
+        "direct_bindings": {
+          "simulation": [
+            "scenario_library",
+            "stress_assumptions"
+          ],
+          "backlog_blocks": [
+            "09",
+            "16"
+          ]
+        }
+      },
+      "10_estrutura_custos": {
+        "status": "normalized",
+        "cost_buckets": [
+          "cloud_and_data",
+          "engineering_and_ai",
+          "blockchain_and_audit",
+          "legal_and_compliance",
+          "field_enablement_and_haas",
+          "customer_acquisition"
+        ],
+        "direct_bindings": {
+          "prudential": [
+            "reserve_vs_operational_cash_separation"
+          ],
+          "backlog_blocks": [
+            "10"
+          ]
+        }
+      },
+      "11_gtm_strategy": {
+        "status": "phased_with_public_sector_constraints",
+        "phases": [
+          "lastro_B2B_B2G",
+          "pilot_with_municipality_and_coops",
+          "hyperlocal_B2C_density",
+          "wiaas_scale"
+        ],
+        "new_constraints": [
+          "public_procurement_cycle",
+          "sandbox_or_poc_mode_before_broad_b2g_scale",
+          "commercial_scale_blocked_without_regulatory_minimum"
+        ],
+        "direct_bindings": {
+          "executive_tracks": [
+            "pre_scaleup_compliance_track",
+            "wiaas_core_monetization_scale_track"
+          ],
+          "backlog_blocks": [
+            "11"
+          ]
+        }
+      },
+      "12_analise_riscos": {
+        "status": "expanded",
+        "risk_domains": [
+          "technical",
+          "regulatory",
+          "operational",
+          "adoption",
+          "economic",
+          "macro"
+        ],
+        "missing_previously_now_added": [
+          "chain_outage",
+          "offline_sync_duplication",
+          "ai_model_drift",
+          "daas_reidentification_risk",
+          "b2g_procurement_delay"
+        ],
+        "direct_bindings": {
+          "executive_tracks": [
+            "operations_and_risk_continuous_system"
+          ],
+          "backlog_blocks": [
+            "12"
+          ]
+        }
+      },
+      "13_simulacao_computacional": {
+        "status": "canonicalized_with_clock_master",
+        "method": "ABM_plus_Monte_Carlo",
+        "clock_master": "daily_tick_with_monthly_enterprise_aggregation",
+        "readiness_rule": "simulação é gate de robustez, não anexo acadêmico",
+        "direct_bindings": {
+          "prudential": [
+            "ccs_base",
+            "ccr_expected_redemption",
+            "lcr_h",
+            "mint_budget_tokens"
+          ],
+          "backlog_blocks": [
+            "13",
+            "17"
+          ]
+        }
+      },
+      "14_fundamentacao_teorica": {
+        "status": "retained",
+        "purpose": "ancorar o desenho institucional, comportamental e econômico sem substituir validação empírica",
+        "direct_bindings": {
+          "simulation": [
+            "hypotheses"
+          ],
+          "backlog_blocks": [
+            "14",
+            "17"
+          ]
+        }
+      },
+      "15_estrutura_institucional": {
+        "status": "strengthened",
+        "minimum_model": [
+          "holding_ip_and_software",
+          "segregated_reserve_or_equivalent_control_structure",
+          "governance_committee",
+          "technical_and_operational_audits"
+        ],
+        "direct_bindings": {
+          "executive_tracks": [
+            "pre_scaleup_compliance_track"
+          ],
+          "backlog_blocks": [
+            "15"
+          ]
+        }
+      },
+      "16_pitch_vc": {
+        "status": "internal_only_until_regulatory_alignment",
+        "hard_rule": "narrativa de captação não pode conflitar com diretrizes de comunicação regulatória do token",
+        "direct_bindings": {
+          "backlog_blocks": [
+            "16"
+          ]
+        }
+      },
+      "17_consolidacao_academica": {
+        "status": "retained",
+        "purpose": "conectar arquitetura, teoria, simulação, riscos e limitações em estrutura acadêmica coerente",
+        "direct_bindings": {
+          "backlog_blocks": [
+            "17"
+          ]
+        }
+      }
+    }
+  },
+  "prudential_layer": {
+    "source_of_truth_artifact": "ART-02",
+    "design_status": "canonical_v4",
+    "canonical_definitions": {
+      "liability_base": "T_circulating_eligible * V_t",
+      "reserve_base": "R_redeemable",
+      "liquidity_base": "L_available = rho * R_redeemable"
+    },
+    "state_machine": {
+      "states": {
+        "surplus": {
+          "entry": "CCS_base >= 1 + delta_up and LCR >= lcr_normal_floor",
+          "stay": "CCS_base >= 1 + delta_down and LCR >= lcr_normal_floor",
+          "emission_gate": 1.0,
+          "burn_intensity": "beta_base"
+        },
+        "alert": {
+          "entry": "1 <= CCS_base < 1 + delta or lcr_stress_floor <= LCR < lcr_normal_floor",
+          "exit_to_surplus": "CCS_base >= 1 + delta_up and LCR >= lcr_normal_floor",
+          "exit_to_crisis": "CCS_base < 1 or LCR < lcr_stress_floor",
+          "emission_gate": "eta",
+          "burn_intensity": "2 * beta_base"
+        },
+        "crisis": {
+          "entry": "CCS_base < 1 or LCR < lcr_stress_floor",
+          "exit": "CCS_base >= 1 and LCR >= lcr_stress_floor -> alert",
+          "emission_gate": 0.0,
+          "burn_intensity": "beta_max"
+        }
+      }
+    },
+    "formulas": {
+      "ccs_base": "R_redeemable / (T_circulating_eligible * V_t)",
+      "ccr_expected_redemption": "R_redeemable / E(Redemptions_t:h)",
+      "raw_emission": "kappa * P_eff_t * emission_gate(state) * volatility_penalty",
+      "mint_budget": "max((R_redeemable / V_t) - T_circulating_eligible, 0)",
+      "emission_executed": "min(raw_emission, mint_budget)",
+      "burn_raw": "beta_t * (Inflow_t / V_t) + UtilitySpend_t",
+      "burn_executed": "min(burn_raw, provisional_supply)",
+      "lcr_h": "L_available_t:h / Outflows_projected_t:h",
+      "redemption_executed": "min(RequestedRedemptions_t + OpeningQueue_t, L_available_t / V_t, DailyCap_t)",
+      "queue_next": "OpeningQueue_t + RequestedRedemptions_t - RedemptionExecuted_t",
+      "supply_next": "T_t + EmissionExecuted_t - BurnExecuted_t",
+      "reserve_next": "R_t + Inflow_t - FiatOutflow_t"
+    },
+    "policy_clarifications": {
+      "buyback_semantics": "recompra/queima de mercado não é mecanismo primário; esterilização contábil e burn por utilidade são preferíveis",
+      "daily_cap": "aplicado como throttle operacional adicional além da restrição de liquidez",
+      "utility_burn": "todo consumo elegível de utilidade reduz supply sujeito a clamp",
+      "queue_policy": "usar opening queue convention para evitar dupla contagem entre períodos"
+    },
+    "observability": {
+      "required_metrics": [
+        "ccs_base",
+        "ccr_expected_redemption",
+        "lcr_h",
+        "state",
+        "mint_budget_tokens",
+        "emission_executed",
+        "burn_executed",
+        "requested_redemptions",
+        "executed_redemptions",
+        "queue_balance",
+        "reserve_redeemable",
+        "reserve_total",
+        "token_supply_eligible"
+      ],
+      "dashboard_consumers": [
+        "governance_committee",
+        "smart_contract_audit",
+        "simulation_team",
+        "finance_strategy",
+        "cooperatives_interface"
+      ]
+    },
+    "contract_binding": {
+      "reference_contract": "ART-04",
+      "must_enforce": [
+        "non_transferability_or_controlled_transfer",
+        "unique_event_hash_usage",
+        "role_based_access_control",
+        "pause_or_queue_in_crisis",
+        "reward_mint_conditioned_on_validated_event"
+      ],
+      "must_not_enforce_onchain": [
+        "raw_pii_storage",
+        "raw_images",
+        "precise_plaintext_geolocation"
+      ]
+    }
+  },
+  "simulation_layer": {
+    "source_of_truth_artifact": "ART-03",
+    "status": "canonical_v4",
+    "clock_convention": {
+      "master_tick": "daily",
+      "enterprise_update_frequency": "monthly",
+      "prudential_update_frequency": "daily",
+      "reporting_outputs": [
+        "daily_paths",
+        "monthly_rollups",
+        "rolling_30d_metrics"
+      ]
+    },
+    "agent_model": {
+      "familia_B2C": {
+        "decision_rule": "Prob(Reciclar)_t = f(M_t, A_t, P_t)",
+        "state_variables": [
+          "motivacao",
+          "habilidade",
+          "frustracao",
+          "historico_recompensas"
+        ],
+        "feedback_rule": "M_t+1 = M_t + delta_behavior * (Recompensa_t - Frustracao_t)"
+      },
+      "empresa_B2B": {
+        "decision_rule": "Inflow if utility_net > 0",
+        "state_variables": [
+          "dor_regulatoria",
+          "orcamento",
+          "retencao",
+          "expansao"
+        ],
+        "monthly_cash_inflow_link": "usa revenue_mix_and_gtm_assumptions"
+      },
+      "validador_cooperativa": {
+        "decision_rule": "fraud_if_gain_exceeds_expected_penalty",
+        "state_variables": [
+          "fraud_propensity",
+          "reputation",
+          "operational_quality"
+        ]
+      }
+    },
+    "hypotheses": {
+      "H1": "PoPA e dados auditáveis reduzem custo de verificação e enforcement",
+      "H2": "motor prudencial mantém q05_ccs_base >= 1.0 no horizonte testado",
+      "H3": "modelo híbrido recompensa + reputação supera incentivo puramente monetário em retenção",
+      "H4": "externalidade cruzada B2B/B2C sustenta subsídio de ativação sem colapsar prudência"
+    },
+    "scenario_library": {
+      "base": {
+        "b2c_growth_mode": "linear",
+        "nrr_signal": 1.05,
+        "fraud_rate": 0.02,
+        "redemption_pressure_daily": 0.0005
+      },
+      "optimistic": {
+        "b2c_growth_mode": "viral_exponential",
+        "nrr_signal": 1.2,
+        "fraud_rate": 0.01,
+        "redemption_pressure_daily": 0.0003
+      },
+      "pessimistic": {
+        "b2b_inflow_shock": -0.3,
+        "fraud_rate": 0.15,
+        "redemption_pressure_daily_range": [
+          0.002,
+          0.005
+        ]
+      }
+    },
+    "robustness_metrics": {
+      "q05_ccs_base": {
+        "target_min": 1.0
+      },
+      "q05_lcr": {
+        "target_min": 0.8
+      },
+      "time_in_crisis_ratio": {
+        "target_max": 0.01
+      },
+      "cvs": {
+        "target": "downward_or_stable"
+      },
+      "cvar_005_ccs": {
+        "target": "monitor_tail_severity"
+      },
+      "half_life_of_shocks": {
+        "target": "finite_and_operationally_acceptable"
+      }
+    },
+    "binding_to_prudential_layer": [
+      "ccs_base",
+      "ccr_expected_redemption",
+      "lcr_h",
+      "mint_budget_tokens",
+      "state_machine"
+    ],
+    "implementation_rule": "Nenhuma simulação pode usar parâmetros prudenciais divergentes dos definidos em canonical_parameters."
+  },
+  "executive_program_layer": {
+    "program_identity": {
+      "name": "Verdia Program Backlog v4 Binding Layer",
+      "status": "active",
+      "execution_principle": "advance_by_validated_readiness_not_task_volume"
+    },
+    "gates": {
+      "G0": "program_alignment",
+      "G1": "architecture_baseline_freeze",
+      "G2": "regulatory_and_economic_feasibility",
+      "G3": "mvp_design_freeze",
+      "G4": "pilot_readiness",
+      "G5": "scientific_and_investor_readiness"
+    },
+    "critical_tracks": {
+      "pre_scaleup_compliance_track": {
+        "status": "hard_gate",
+        "required_evidence": [
+          "parecer_juridico_preliminar_do_vrd",
+          "politica_lgpd_operacional_aprovada",
+          "modelo_institucional_minimo_definido"
+        ]
+      },
+      "algorithmic_central_bank_execution_track": {
+        "status": "hard_requirement_pre_scale",
+        "required_modules": [
+          "ACB-01",
+          "ACB-02",
+          "ACB-03",
+          "ACB-04"
+        ]
+      },
+      "interface_product_execution_track": {
+        "status": "parallel_requirement",
+        "required_fronts": [
+          "IF-01",
+          "IF-02",
+          "IF-03"
+        ]
+      },
+      "operations_and_risk_continuous_system": {
+        "status": "continuous_requirement",
+        "required_routines": [
+          "OCR-01",
+          "OCR-02",
+          "OCR-03",
+          "OCR-04"
+        ]
+      },
+      "wiaas_core_monetization_scale_track": {
+        "status": "growth_requirement",
+        "required_modules": [
+          "MON-01",
+          "MON-02",
+          "MON-03"
+        ]
+      }
+    },
+    "backlog_binding_summary": {
+      "section_to_backlog_map": {
+        "01_arquitetura_estrategica": [
+          "01",
+          "08",
+          "11"
+        ],
+        "02_arquitetura_tecnologica": [
+          "02",
+          "03",
+          "06",
+          "07"
+        ],
+        "03_popa_protocol": [
+          "03",
+          "06",
+          "12"
+        ],
+        "04_tokenomics": [
+          "04",
+          "07",
+          "09",
+          "15"
+        ],
+        "05_engenharia_comportamental": [
+          "05",
+          "06",
+          "13"
+        ],
+        "06_ux_ui": [
+          "06"
+        ],
+        "07_compliance_esg_by_design": [
+          "07",
+          "12",
+          "15"
+        ],
+        "08_modelo_monetizacao": [
+          "08",
+          "09",
+          "11"
+        ],
+        "09_projecao_financeira_5_anos": [
+          "09",
+          "16"
+        ],
+        "10_estrutura_custos": [
+          "10"
+        ],
+        "11_gtm_strategy": [
+          "11"
+        ],
+        "12_analise_riscos": [
+          "12"
+        ],
+        "13_simulacao_computacional": [
+          "13",
+          "17"
+        ],
+        "14_fundamentacao_teorica": [
+          "14",
+          "17"
+        ],
+        "15_estrutura_institucional": [
+          "15"
+        ],
+        "16_pitch_vc": [
+          "16"
+        ],
+        "17_consolidacao_academica": [
+          "17"
+        ]
+      },
+      "prudential_to_backlog_map": {
+        "ACB-01": [
+          "04",
+          "09",
+          "12",
+          "13"
+        ],
+        "ACB-02": [
+          "03",
+          "04",
+          "12",
+          "13"
+        ],
+        "ACB-03": [
+          "04",
+          "12",
+          "13"
+        ],
+        "ACB-04": [
+          "04",
+          "06",
+          "12",
+          "13"
+        ]
+      },
+      "simulation_to_backlog_map": {
+        "hypotheses": [
+          "13",
+          "14",
+          "17"
+        ],
+        "scenario_library": [
+          "09",
+          "13",
+          "16"
+        ],
+        "robustness_metrics": [
+          "12",
+          "13",
+          "17"
+        ]
+      }
+    },
+    "execution_directives": {
+      "EPD-01": "execute_by_gates",
+      "EPD-02": "regulatory_readiness_blocks_scale",
+      "EPD-03": "prudential_engine_first",
+      "EPD-04": "product_by_interface",
+      "EPD-05": "risk_and_quality_as_routine",
+      "EPD-06": "wiaas_first_monetization",
+      "EPD-07": "simulation_as_gate"
+    }
+  },
+  "traceability_matrix": {
+    "architecture_to_prudential": [
+      {
+        "from": "04_tokenomics",
+        "to": "ACB-01..04",
+        "binding_type": "direct",
+        "reason": "tokenomics only becomes executable through prudential engine modules"
+      },
+      {
+        "from": "03_popa_protocol",
+        "to": "ACB-02",
+        "binding_type": "direct",
+        "reason": "validated physical production is input to emission controller"
+      },
+      {
+        "from": "07_compliance_esg_by_design",
+        "to": "pre_scaleup_compliance_track",
+        "binding_type": "hard_gate",
+        "reason": "regulatory readiness conditions scale"
+      }
+    ],
+    "prudential_to_simulation": [
+      {
+        "from": "ccs_base",
+        "to": "q05_ccs_base",
+        "binding_type": "metric_projection"
+      },
+      {
+        "from": "lcr_h",
+        "to": "q05_lcr",
+        "binding_type": "metric_projection"
+      },
+      {
+        "from": "state_machine",
+        "to": "time_in_crisis_ratio",
+        "binding_type": "state_projection"
+      },
+      {
+        "from": "mint_budget_tokens",
+        "to": "stress_scenarios",
+        "binding_type": "control_constraint"
+      }
+    ],
+    "simulation_to_backlog": [
+      {
+        "from": "robustness_metrics",
+        "to": "G5",
+        "binding_type": "gate_evidence"
+      },
+      {
+        "from": "scenario_library",
+        "to": "09_projecao_financeira_5_anos",
+        "binding_type": "assumption_validation"
+      }
+    ],
+    "architecture_to_execution": [
+      {
+        "from": "06_ux_ui",
+        "to": "IF-01_IF-02_IF-03",
+        "binding_type": "front_delivery"
+      },
+      {
+        "from": "12_analise_riscos",
+        "to": "OCR-01..04",
+        "binding_type": "continuous_controls"
+      },
+      {
+        "from": "08_modelo_monetizacao",
+        "to": "MON-01..03",
+        "binding_type": "commercial_execution"
+      }
+    ]
+  },
+  "open_items_and_tbc_parameters": {
+    "calibration_required": [
+      "kappa",
+      "tau",
+      "eta_if_alert_needs_adjustment",
+      "liquidation_value_brl_if_non_unitary",
+      "reserve_haircut_policy",
+      "fraud_detection_thresholds",
+      "enterprise_inflow_distribution_parameters",
+      "b2c_activation_baseline"
+    ],
+    "external_validation_required": [
+      "parecer_juridico_do_token",
+      "lgpd_operacional_com_bases_legais_e_dpia_se_aplicavel",
+      "procurement_model_for_B2G",
+      "contabilizacao_e_tratamento_juridico_da_reserva_segregada"
+    ],
+    "production_readiness_not_yet_claimed": [
+      "smart_contract_not_production_ready",
+      "simulation_requires_calibration",
+      "financial_projection_is_internal_hypothesis",
+      "daas_requires_data_licensing_policy"
+    ]
+  },
+  "appendix_open_points_v1": {
+    "metadata": {
+      "name": "Verdia Open Points Appendix",
+      "version": "1.0",
+      "status": "active",
+      "purpose": "Consolidar pendências críticas ainda em aberto no repositório mestre v4, com critérios de fechamento, responsáveis, dependências e impactos.",
+      "attachment_mode": "append_as_top_level_key",
+      "alignment_rule": "Este apêndice herda a taxonomia, os gates, os papéis e os princípios prudenciais definidos no repositório mestre v4."
+    },
+    "source_of_truth_binding": {
+      "master_repository": "verdia_master_repository_v4.json",
+      "binding_type": "single_source_of_truth_extension",
+      "governance_rule": "Nenhum item listado neste apêndice pode ser considerado resolvido sem evidência documental, owner definido e aceite formal no gate correspondente."
+    },
+    "open_points_register": {
+      "OP-01_parameter_calibration": {
+        "name": "Canonical Calibration of kappa, tau and anti-fraud thresholds",
+        "status": "open",
+        "priority": "critical",
+        "domain": "prudential_engine_and_oracle_integrity",
+        "owner_role": "blockchain_tokenomics_lead",
+        "linked_sections": [
+          "4_tokenomics",
+          "3_popa_protocol",
+          "13_simulacao_computacional"
+        ],
+        "objective": "Calibrar os parâmetros canônicos que governam emissão prudencial, validação PoPA e antifraude operacional.",
+        "canonical_parameters": {
+          "kappa": {
+            "status": "not_calibrated",
+            "calibration_target": "maximizar incentivo sem comprometer CCS e LCR"
+          },
+          "tau": {
+            "status": "not_calibrated",
+            "calibration_target": "minimizar fraude residual mantendo taxa operacional de aprovação compatível com SLA e UX"
+          },
+          "anti_fraud_thresholds": {
+            "subparameters": [
+              "density_anomaly_threshold",
+              "geo_spoofing_threshold",
+              "mass_reconciliation_tolerance",
+              "vision_confidence_floor",
+              "reputation_penalty_step",
+              "manual_review_trigger_score"
+            ]
+          }
+        },
+        "gate_impact": {
+          "blocking_gates": [
+            "G4",
+            "G5"
+          ]
+        }
+      },
+      "OP-02_final_token_legal_opinion": {
+        "name": "Final Legal Opinion on VRD Token Design",
+        "status": "open",
+        "priority": "critical",
+        "domain": "regulatory_legal",
+        "owner_role": "compliance_legal_lead",
+        "linked_sections": [
+          "4_tokenomics",
+          "15_estrutura_institucional"
+        ],
+        "objective": "Fechar o parecer jurídico final do desenho do $VRD, validando a tese de utility token fechado.",
+        "gate_impact": {
+          "blocking_gates": [
+            "G2",
+            "commercial_scale_up_hard_gate"
+          ]
+        }
+      },
+      "OP-03_operational_lgpd_and_dpia": {
+        "name": "Operational LGPD Framework and DPIA Assessment",
+        "status": "open",
+        "priority": "critical",
+        "domain": "privacy_and_data_governance",
+        "owner_role": "security_lead",
+        "linked_sections": [
+          "2_arquitetura_tecnologica",
+          "7_compliance_esg_by_design"
+        ],
+        "objective": "Fechar a política operacional LGPD do ecossistema com base legal por fluxo e decisão formal sobre DPIA.",
+        "gate_impact": {
+          "blocking_gates": [
+            "G2",
+            "G4",
+            "commercial_scale_up_hard_gate"
+          ]
+        }
+      },
+      "OP-04_b2g_contracting_and_procurement": {
+        "name": "B2G Contracting Model and Procurement Readiness",
+        "status": "open",
+        "priority": "high",
+        "domain": "public_sector_commercial_model",
+        "owner_role": "growth_gtm_lead",
+        "linked_sections": [
+          "1_arquitetura_estrategica",
+          "8_modelo_monetizacao",
+          "11_gtm_strategy"
+        ],
+        "objective": "Definir o desenho contratual B2G e a estratégia de procurement público.",
+        "gate_impact": {
+          "blocking_gates": [
+            "G4"
+          ]
+        }
+      },
+      "OP-05_daas_licensing_policy": {
+        "name": "DaaS Licensing and Data Commercialization Policy",
+        "status": "open",
+        "priority": "high",
+        "domain": "data_monetization_governance",
+        "owner_role": "finance_strategy_lead",
+        "linked_sections": [
+          "8_modelo_monetizacao",
+          "7_compliance_esg_by_design"
+        ],
+        "objective": "Definir a política de licenciamento para DaaS.",
+        "gate_impact": {
+          "blocking_gates": [
+            "G5"
+          ]
+        }
+      }
+    },
+    "cross_open_point_dependencies": [
+      {
+        "from": "OP-01",
+        "to": "OP-03",
+        "reason": "Thresholds antifraude dependem da definição de dados permitidos e pseudonimização."
+      },
+      {
+        "from": "OP-02",
+        "to": "OP-04",
+        "reason": "Viabilidade contratual B2G depende da narrativa regulatória segura do token."
+      },
+      {
+        "from": "OP-03",
+        "to": "OP-05",
+        "reason": "Política DaaS depende da delimitação dos dados comercializáveis."
+      },
+      {
+        "from": "OP-01",
+        "to": "OP-02",
+        "reason": "Calibração prudencial influencia interpretação de risco econômico do token."
+      }
+    ],
+    "readiness_rollup": {
+      "name": "Open Points Closure Readiness",
+      "critical_items": [
+        "OP-01",
+        "OP-02",
+        "OP-03"
+      ],
+      "high_priority_items": [
+        "OP-04",
+        "OP-05"
+      ],
+      "closure_rule": "Item fechado somente com deliverables emitidos, aceite registrado e atualização do source of truth mestre."
+    },
+    "source_of_truth_update_rules": {
+      "mandatory_updates_after_closure": [
+        {
+          "open_point_id": "OP-01",
+          "update_target": "canonical_parameters"
+        },
+        {
+          "open_point_id": "OP-02",
+          "update_target": "regulatory_posture_and_token_policy"
+        },
+        {
+          "open_point_id": "OP-03",
+          "update_target": "privacy_and_data_governance_policy"
+        },
+        {
+          "open_point_id": "OP-04",
+          "update_target": "gtm_and_b2g_contracting_model"
+        },
+        {
+          "open_point_id": "OP-05",
+          "update_target": "daas_revenue_policy_and_contractual_controls"
+        }
+      ],
+      "governance_rule": "Toda pendência fechada neste apêndice deve ser refletida no repositório mestre v4."
+    }
+  },
+  "verdia_smart_contract_audit_framework_v1": {
+    "metadata": {
+      "name": "Verdia Smart Contract Audit Framework",
+      "version": "1.0",
+      "status": "draft_structured_from_technical_audit",
+      "scope": [
+        "VerdiaClosedUtilityToken",
+        "VerdiaProtocolController"
+      ]
+    },
+    "audit_summary": {
+      "overall_assessment": "Arquitetura conceitualmente consistente com utility token fechado e motor prudencial básico funcional, porém dependente de hardening operacional para produção.",
+      "production_readiness": "not_ready_for_unrestricted_production",
+      "main_strengths": [
+        "intransferibilidade preservada por reversão de funções de transferência",
+        "cunhagem e queima restritas ao controller",
+        "prevenção de dupla recompensa via usedEventHashes",
+        "motor prudencial com estados e circuit breaker",
+        "capacidade de enfileirar eventos quando emissão não é permitida"
+      ],
+      "main_risks": [
+        "centralização excessiva em chaves privilegiadas",
+        "dependência operacional do reviewer",
+        "uso de block.timestamp para lógica diária",
+        "necessidade de maturidade de segurança antes de produção"
+      ]
+    },
+    "contracts": {
+      "VerdiaClosedUtilityToken": {
+        "findings": [
+          {
+            "finding_id": "VCT-01",
+            "title": "Intransferibilidade implementada",
+            "severity": "strength",
+            "status": "implemented"
+          },
+          {
+            "finding_id": "VCT-02",
+            "title": "Controle de mint/burn restrito ao controller",
+            "severity": "strength",
+            "status": "implemented"
+          },
+          {
+            "finding_id": "VCT-03",
+            "title": "Risco de centralização no owner",
+            "severity": "high",
+            "status": "open"
+          }
+        ],
+        "recommended_controls": [
+          {
+            "control_id": "VCT-C01",
+            "name": "Multisig for owner privileges",
+            "priority": "critical"
+          },
+          {
+            "control_id": "VCT-C02",
+            "name": "Timelock for controller changes",
+            "priority": "high"
+          },
+          {
+            "control_id": "VCT-C03",
+            "name": "Emergency pause governance",
+            "priority": "high"
+          }
+        ]
+      },
+      "VerdiaProtocolController": {
+        "findings": [
+          {
+            "finding_id": "VPC-01",
+            "title": "Idempotência de evento implementada",
+            "severity": "strength",
+            "status": "implemented"
+          },
+          {
+            "finding_id": "VPC-02",
+            "title": "Motor prudencial com estados e fila",
+            "severity": "strength",
+            "status": "implemented"
+          },
+          {
+            "finding_id": "VPC-03",
+            "title": "Dependência de block.timestamp",
+            "severity": "medium",
+            "status": "open"
+          },
+          {
+            "finding_id": "VPC-04",
+            "title": "Concentração de poder no reviewer",
+            "severity": "high",
+            "status": "open"
+          }
+        ],
+        "recommended_controls": [
+          {
+            "control_id": "VPC-C01",
+            "name": "Reviewer multisig or dual-control",
+            "priority": "critical"
+          },
+          {
+            "control_id": "VPC-C02",
+            "name": "Timestamp mitigation strategy",
+            "priority": "high"
+          },
+          {
+            "control_id": "VPC-C03",
+            "name": "Queued-event governance logging",
+            "priority": "high"
+          },
+          {
+            "control_id": "VPC-C04",
+            "name": "Role separation for redemption and review",
+            "priority": "high"
+          },
+          {
+            "control_id": "VPC-C05",
+            "name": "Rate-limiting and anomaly alerts",
+            "priority": "medium"
+          }
+        ]
+      }
+    },
+    "cross_contract_risk_register": [
+      {
+        "risk_id": "SCR-01",
+        "title": "Single key compromise in privileged roles",
+        "severity": "critical",
+        "recommended_treatment": "Multisig, rotação de chaves, segregação de funções."
+      },
+      {
+        "risk_id": "SCR-02",
+        "title": "Operational abuse in queued-event processing",
+        "severity": "high",
+        "recommended_treatment": "Dual approval, logging estruturado, revisão amostral."
+      },
+      {
+        "risk_id": "SCR-03",
+        "title": "Time-boundary manipulation around daily mint cap",
+        "severity": "medium",
+        "recommended_treatment": "Epochs discretas ou oráculo temporal confiável."
+      }
+    ],
+    "recommended_remediation_program": {
+      "phase_1_critical": [
+        {
+          "item_id": "RP-01",
+          "name": "Migrate owner to multisig"
+        },
+        {
+          "item_id": "RP-02",
+          "name": "Protect oracle/reviewer with multisig"
+        },
+        {
+          "item_id": "RP-03",
+          "name": "Emergency operational playbook"
+        }
+      ],
+      "phase_2_hardening": [
+        {
+          "item_id": "RP-04",
+          "name": "Refactor daily rollover logic"
+        },
+        {
+          "item_id": "RP-05",
+          "name": "Audit trail for reviewer decisions"
+        },
+        {
+          "item_id": "RP-06",
+          "name": "Separate redemption debit from queue approval"
+        }
+      ],
+      "phase_3_assurance": [
+        {
+          "item_id": "RP-07",
+          "name": "Independent security audit"
+        },
+        {
+          "item_id": "RP-08",
+          "name": "Formal verification or property-based testing"
+        },
+        {
+          "item_id": "RP-09",
+          "name": "Simulation of privileged role misuse"
+        }
+      ]
+    },
+    "production_release_gate": {
+      "name": "Smart Contract Production Readiness Gate",
+      "status": "not_passed",
+      "mandatory_conditions": [
+        "owner, oracle e reviewer protegidos por governança robusta",
+        "lógica temporal diária endurecida",
+        "trilhas de auditoria implementadas",
+        "testes cobrindo cenários prudenciais, fraude, fila e abuso",
+        "auditoria externa independente concluída",
+        "risco residual formalmente aceito"
+      ],
+      "blocking_rule": "Sem cumprimento, contratos são implementação de referência, não produção plena."
+    },
+    "mapping_to_program_governance": {
+      "linked_tracks": [
+        "algorithmic_central_bank_execution_track",
+        "pre_scaleup_compliance_track",
+        "operations_and_risk_continuous_system"
+      ],
+      "linked_routines": [
+        "OCR-01",
+        "OCR-03"
+      ],
+      "linked_directives": [
+        "EPD-02",
+        "EPD-03",
+        "EPD-05"
+      ]
+    }
+  }
+}

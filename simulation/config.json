@@ -1,0 +1,113 @@
+{
+  "simulation": {
+    "iterations": 10000,
+    "periods": 120,
+    "time_unit": "day",
+    "random_seed": 42
+  },
+
+  "initial_conditions": {
+    "R_0": 3000000,
+    "T_0": 0,
+    "V_0": 1.00,
+    "rho": 0.50,
+    "delta": 0.20,
+    "kappa": 1.0,
+    "beta_base": 0.05,
+    "beta_max": 0.30,
+    "omega": 1.5,
+    "epsilon_convergence": 0.01
+  },
+
+  "agent_parameters": {
+    "family_B2C": {
+      "initial_count": 1000,
+      "growth_rate_monthly": 0.08,
+      "motivation_mu": 0.6,
+      "motivation_sigma": 0.15,
+      "ability": 0.8,
+      "prompt_probability": 0.3,
+      "feedback_delta": 0.05,
+      "avg_kg_per_action": 2.0
+    },
+    "enterprise_B2B": {
+      "initial_count": 5,
+      "growth_rate_monthly": 0.05,
+      "avg_contract_annual_brl": 240000,
+      "nrr": 1.05,
+      "alpha_network": 0.001,
+      "beta_network": 0.01,
+      "cost_per_contract": 80000
+    },
+    "validator_cooperative": {
+      "initial_count": 10,
+      "fraud_alpha": 2.0,
+      "fraud_beta": 50.0,
+      "detection_probability": 0.85,
+      "reputation_penalty_multiplier": 5.0
+    }
+  },
+
+  "stochastic_processes": {
+    "production_B2C": {
+      "model": "geometric_brownian",
+      "mu_P": 0.001,
+      "sigma_P": 0.05
+    },
+    "inflow_B2B": {
+      "model": "monthly_nrr_with_shocks",
+      "mu_I": 0.0,
+      "sigma_I": 0.03
+    },
+    "fraud_rate": {
+      "phi_base": 0.02,
+      "phi_attack": 0.13,
+      "attack_probability": 0.0
+    },
+    "redemption_rate": {
+      "model": "lognormal",
+      "mu_gamma": -7.6,
+      "sigma_gamma": 0.5
+    }
+  },
+
+  "scenarios": {
+    "base": {
+      "description": "Equilíbrio Dinâmico",
+      "nrr": 1.05,
+      "phi_base": 0.02,
+      "attack_probability": 0.0,
+      "shock_probability": 0.0,
+      "mu_gamma": -7.6
+    },
+    "optimistic": {
+      "description": "Flywheel Effect",
+      "nrr": 1.20,
+      "phi_base": 0.01,
+      "attack_probability": 0.0,
+      "shock_probability": 0.0,
+      "growth_multiplier": 1.5,
+      "mu_gamma": -8.0
+    },
+    "pessimistic": {
+      "description": "Teste de Fogo",
+      "nrr": 0.85,
+      "phi_base": 0.02,
+      "attack_probability": 0.10,
+      "phi_attack": 0.15,
+      "shock_probability": 0.05,
+      "shock_magnitude": 0.30,
+      "mu_gamma": -6.2
+    }
+  },
+
+  "robustness_criteria": {
+    "solvency_tail": "Q_0.05(CCS_t) >= 1.0 for all t",
+    "liquidity_tail": "Q_0.05(LCR_t) >= 0.8 for all t",
+    "stability_cvs": "CVS converges asymptotically",
+    "convergence_epsilon": "| CVS_bar(t-11:t) - CVS_bar(t-23:t-12) | < epsilon",
+    "crisis_time": "pi_3 = (1/T) * sum(1(CCS_t < 1)) < 0.01",
+    "mean_reversion_theta": "theta = 1 - beta_AR1 > 0",
+    "half_life": "t_half = ln(0.5) / ln(beta_AR1)"
+  }
+}
