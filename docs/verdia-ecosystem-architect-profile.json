@@ -178,7 +178,8 @@
           "R_t": "Reserva fiduciária [BRL]",
           "T_t": "Tokens em circulação [token]",
           "V_t": "Valor de liquidação por token [BRL/token]"
-        }
+        },
+        "canonical_alignment_note": "R_t neste documento corresponde a R_redeemable no master_repository_v4. A segregação completa entre R_total, R_operational, R_restricted e R_redeemable está definida em canonical_parameters.reserve_accounting."
       },
       "coeficiente_cobertura_sistemica": {
         "formula": "CCS_t = R_t / (T_t × V_t)",
@@ -188,7 +189,12 @@
           "abaixo_1": "Risco de insolvência"
         },
         "buffer_prudencial": "CCS_t ≥ 1 + δ onde δ = 0.20 (20%)",
-        "analogia": "Equivalente funcional de Basileia programável"
+        "analogia": "Equivalente funcional de Basileia programável",
+        "canonical_metric_mapping": {
+          "CCS_base": "CCS_t = R_t / (T_t × V_t) — cobertura do supply em circulação",
+          "CCR_expected_redemption": "CCR_t = R_t / E(Resgates_t) — cobertura de resgates esperados",
+          "note": "No master_repository_v4, estas são métricas separadas. CCS neste doc = ccs_base; fórmula refinada = ccr_expected_redemption."
+        }
       },
       "regra_emissao": {
         "formula": "E_t = κ × P_t^eff × g(CCS_t)",
@@ -232,7 +238,7 @@
         },
         "alocacao_fundo": {
           "reserva_liquidez": "70%",
-          "recompra_queima": "20%",
+          "esterilizacao_burn": "20%",
           "fundo_anticiclico": "10%"
         }
       },

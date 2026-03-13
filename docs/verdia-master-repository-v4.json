@@ -37,7 +37,7 @@
     "artifact_registry": {
       "audit_report_json": {
         "artifact_id": "ART-01",
-        "path": "verdia_audit_bundle/verdia_audit_report.json",
+        "path": "docs/audit_report.json",
         "role": "detailed_audit_evidence"
       },
       "prudential_engine_python": {

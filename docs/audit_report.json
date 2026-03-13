@@ -1,0 +1,113 @@
+{
+  "audit_metadata": {
+    "name": "Verdia Ecosystem Full Architecture Audit",
+    "timestamp": "2026-03-13",
+    "files_audited": 11,
+    "total_findings": 12,
+    "severity_summary": {
+      "critical": 1,
+      "high": 4,
+      "medium": 6,
+      "low": 0,
+      "info": 1
+    }
+  },
+  "findings": [
+    {
+      "id": "AUD-001",
+      "severity": "high",
+      "category": "parameter_divergence",
+      "description": "sim_config.rho=0.5 != canonical=0.7",
+      "location": "simulation/config.json::initial_conditions::rho",
+      "recommendation": "Update sim_config to match canonical value 0.7"
+    },
+    {
+      "id": "AUD-002",
+      "severity": "medium",
+      "category": "parameter_ambiguity",
+      "description": "agent prompt uses η=0.3 for alert state, canonical=0.5",
+      "location": "agents/ecosystem_architect_agent.json::emission_rule",
+      "recommendation": "Align agent prompt eta to canonical eta=0.5 or document as configurable"
+    },
+    {
+      "id": "AUD-003",
+      "severity": "high",
+      "category": "reserve_model_gap",
+      "description": "Profile uses R_t without R_redeemable/R_operational/R_restricted distinction",
+      "location": "profile::4_tokenomics::condicao_solvencia",
+      "recommendation": "Add note that R_t in profile corresponds to R_redeemable in master v4 canonical model"
+    },
+    {
+      "id": "AUD-004",
+      "severity": "high",
+      "category": "metric_collision",
+      "description": "Profile uses CCS_t for both supply coverage AND expected redemption coverage. Master v4 separates these as ccs_base and ccr_expected_redemption.",
+      "location": "profile::4_tokenomics::condicao_solvencia::refinada",
+      "recommendation": "Add clarification that CCS in profile maps to ccs_base, and the refined formula maps to ccr_expected_redemption in canonical model"
+    },
+    {
+      "id": "AUD-005",
+      "severity": "medium",
+      "category": "implementation_incomplete",
+      "description": "protocol.py implements CCS but not CCR (expected redemption coverage) from master v4",
+      "location": "simulation/protocol.py",
+      "recommendation": "Add ccr_expected_redemption method or document scope limitation"
+    },
+    {
+      "id": "AUD-006",
+      "severity": "critical",
+      "category": "missing_control",
+      "description": "protocol.py does NOT enforce mint_budget from master v4: MintBudget_t = max((R_redeemable_t / V_t) - T_circulating_eligible_t, 0). Emission can exceed reserve-backed cap.",
+      "location": "simulation/protocol.py::compute_emission",
+      "recommendation": "Add mint_budget = max((R/V) - T, 0) and clamp emission to min(raw_emission, mint_budget)"
+    },
+    {
+      "id": "AUD-007",
+      "severity": "high",
+      "category": "broken_reference",
+      "description": "Artifact ART-01 path 'verdia_audit_bundle/verdia_audit_report.json' does not exist",
+      "location": "master-v4::source_of_truth::artifact_registry",
+      "recommendation": "Fix path or create missing file"
+    },
+    {
+      "id": "AUD-008",
+      "severity": "medium",
+      "category": "queue_convention",
+      "description": "Master v4 specifies 'opening queue convention' to avoid double-counting. protocol.py may use closing queue.",
+      "location": "simulation/protocol.py::step",
+      "recommendation": "Document queue convention used or align to opening queue"
+    },
+    {
+      "id": "AUD-009",
+      "severity": "medium",
+      "category": "incomplete_payload",
+      "description": "data_model popa_event missing canonical onchain fields: {'validator_id_hash', 'model_version', 'reward_tokens', 'trust_band', 'status', 'timestamp_utc', 'idempotency_key_hash', 'policy_version', 'event_hash'}",
+      "location": "architecture/data_model.json::popa_event",
+      "recommendation": "Add missing fields or document offchain→onchain mapping"
+    },
+    {
+      "id": "AUD-010",
+      "severity": "medium",
+      "category": "idempotency_gap",
+      "description": "data_model missing idempotency fields: {'device_nonce', 'source_node_id', 'timestamp_utc'}",
+      "location": "architecture/data_model.json::popa_event",
+      "recommendation": "Add device_nonce, source_node_id to popa_event entity"
+    },
+    {
+      "id": "AUD-011",
+      "severity": "info",
+      "category": "open_sc_findings",
+      "description": "3 open smart contract findings: VerdiaClosedUtilityToken::VCT-03: Risco de centralização no owner; VerdiaProtocolController::VPC-03: Dependência de block.timestamp; VerdiaProtocolController::VPC-04: Concentração de poder no reviewer",
+      "location": "master-v4::verdia_smart_contract_audit_framework_v1",
+      "recommendation": "Track remediation in program backlog"
+    },
+    {
+      "id": "AUD-012",
+      "severity": "medium",
+      "category": "semantic_issue",
+      "description": "Profile may use 'buyback/recompra' language which master v4 flags as semantically weak for closed utility token (NG-01)",
+      "location": "profile (search for buyback/recompra)",
+      "recommendation": "Replace with 'esterilização contábil' or 'burn de utilidade'"
+    }
+  ]
+}

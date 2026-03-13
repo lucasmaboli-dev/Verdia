@@ -36,11 +36,11 @@ class VerdiaProtocol:
     delta: float = 0.20          # Buffer prudencial
     delta_up: float = 0.22       # Histerese (saída do alerta)
     delta_down: float = 0.18     # Histerese (entrada no alerta)
-    rho: float = 0.50            # Fração de reserva como liquidez
+    rho: float = 0.70            # Fração de reserva como liquidez
     kappa: float = 1.0           # Conversão produção → tokens
     beta_base: float = 0.05      # Taxa esterilização base
     beta_max: float = 0.30       # Taxa esterilização máxima
-    eta: float = 0.3             # Fator de emissão reduzida (estado B)
+    eta: float = 0.5             # Fator de emissão reduzida (estado B)
     ema_lambda: float = 0.0645   # EMA lambda (janela 30 dias)
 
     # --- Derived ---
@@ -60,6 +60,21 @@ class VerdiaProtocol:
         if denominator <= 0:
             return float("inf")
         return self.R / denominator
+
+
+
+    def CCR(self, expected_redemptions: float) -> float:
+        """CCR_expected_t = R_redeemable / E(Redemptions_t:h)."""
+        if expected_redemptions <= 0:
+            return float("inf")
+        return self.R / expected_redemptions
+
+    @property
+    def mint_budget(self) -> float:
+        """MintBudget_t = max((R_redeemable / V) - T, 0) — cap de emissão lastreado."""
+        if self.V <= 0:
+            return 0.0
+        return max((self.R / self.V) - self.T, 0)
 
     @property
     def L(self) -> float:
@@ -111,7 +126,8 @@ class VerdiaProtocol:
 
     def compute_emission(self, P_eff: float) -> float:
         """E_t = κ × P_t^eff × g(estado)."""
-        return self.kappa * P_eff * self.g()
+        raw = self.kappa * P_eff * self.g()
+        return min(raw, self.mint_budget)
 
     # ── Burn ──────────────────────────────────────────────────
 
@@ -149,6 +165,8 @@ class VerdiaProtocol:
     # ── Daily Settlement ──────────────────────────────────────
 
     def step(self, P_eff: float, I_t: float, W_t: float, U_t: float) -> dict:
+        # QUEUE CONVENTION: Uses opening queue (Q at start of period).
+        # Q_next = Q_opening + W_t - X_t (master v4 opening_queue_convention).
         """
         Executa ciclo diário completo do Banco Central Algorítmico.
 

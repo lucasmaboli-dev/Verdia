@@ -1,32 +1,125 @@
 {
   "entities": {
     "user": {
-      "attributes": ["user_id", "type (B2C|cooperativa|B2B|B2G)", "wallet_address", "reputation_score", "streak_count", "badge_level", "created_at"],
+      "attributes": [
+        "user_id",
+        "type (B2C|cooperativa|B2B|B2G)",
+        "wallet_address",
+        "reputation_score",
+        "streak_count",
+        "badge_level",
+        "created_at"
+      ],
       "privacy": "Dados pessoais anonimizados antes de Layer Blockchain"
     },
     "popa_event": {
-      "attributes": ["event_id", "user_id", "cooperativa_id", "ecoponto_id", "timestamp", "weight_kg", "volume_estimate", "material_type", "cv_classification", "geo_lat", "geo_lng", "trust_score", "validated", "token_emission"],
-      "lifecycle": "Captura IoT → Validação IA → Registro Blockchain → Emissão Token"
+      "attributes": [
+        "event_id",
+        "event_hash",
+        "idempotency_key_hash",
+        "device_nonce",
+        "source_node_id",
+        "user_id_hash",
+        "cooperativa_id_hash",
+        "ecoponto_id",
+        "timestamp_utc",
+        "weight_kg",
+        "volume_estimate",
+        "material_type",
+        "cv_classification",
+        "trust_score",
+        "trust_band",
+        "geo_hash_coarse",
+        "policy_version",
+        "model_version",
+        "validated",
+        "status",
+        "reward_tokens",
+        "validator_id_hash"
+      ],
+      "lifecycle": "Captura IoT → Validação IA → Registro Blockchain → Emissão Token",
+      "privacy_note": "Campos *_hash são pseudonimizados. Nenhum PII em texto claro on-chain. geo_hash_coarse usa resolução reduzida.",
+      "onchain_vs_offchain": {
+        "onchain_minimum": [
+          "event_hash",
+          "idempotency_key_hash",
+          "policy_version",
+          "model_version",
+          "timestamp_utc",
+          "validator_id_hash",
+          "reward_tokens",
+          "trust_band",
+          "status"
+        ],
+        "offchain_only": [
+          "user_id (PII)",
+          "cooperativa_id (original)",
+          "weight_kg_raw",
+          "volume_raw",
+          "imagem_bruta",
+          "geolocalizacao_precisa"
+        ]
+      }
     },
     "token_transaction": {
-      "attributes": ["tx_id", "from_address", "to_address", "amount_vrd", "type (mint|burn|redeem|utility_spend)", "popa_event_id", "block_hash", "timestamp"],
+      "attributes": [
+        "tx_id",
+        "from_address",
+        "to_address",
+        "amount_vrd",
+        "type (mint|burn|redeem|utility_spend)",
+        "popa_event_id",
+        "block_hash",
+        "timestamp"
+      ],
       "immutability": "Registrado em Layer 2"
     },
     "contract_b2b": {
-      "attributes": ["contract_id", "company_id", "type (SaaS|CRE|DaaS)", "annual_value_brl", "tonnage_committed", "start_date", "end_date", "nrr_rate"],
+      "attributes": [
+        "contract_id",
+        "company_id",
+        "type (SaaS|CRE|DaaS)",
+        "annual_value_brl",
+        "tonnage_committed",
+        "start_date",
+        "end_date",
+        "nrr_rate"
+      ],
       "revenue": "Gera I_t (inflow fiduciário)"
     },
     "cooperativa": {
-      "attributes": ["coop_id", "name", "location", "hardware_kit_id", "reputation_score", "daily_volume_avg", "daily_redemption_cap", "status (active|suspended)"],
+      "attributes": [
+        "coop_id",
+        "name",
+        "location",
+        "hardware_kit_id",
+        "reputation_score",
+        "daily_volume_avg",
+        "daily_redemption_cap",
+        "status (active|suspended)"
+      ],
       "role": "Nó Validador do protocolo PoPA"
     },
     "protocol_state": {
-      "attributes": ["date", "R_t", "T_t", "V_t", "CCS_t", "LCR_t", "E_t", "B_t", "I_t", "Out_t", "Q_t", "state (A|B|C)", "cvs_rolling"],
+      "attributes": [
+        "date",
+        "R_t",
+        "T_t",
+        "V_t",
+        "CCS_t",
+        "LCR_t",
+        "E_t",
+        "B_t",
+        "I_t",
+        "Out_t",
+        "Q_t",
+        "state (A|B|C)",
+        "cvs_rolling"
+      ],
       "frequency": "Diário",
       "on_chain": true
     }
   },
-
   "flows": {
     "physical_to_digital": "Evento físico (descarte) → IoT captura → IA valida (PoPA) → Blockchain registra → Token emitido",
     "B2B_to_ecosystem": "Contrato B2B → Pagamento mensal (I_t) → Reserva fiduciária (R_t) → Sustenta lastro do token",

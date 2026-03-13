@@ -5,20 +5,18 @@
     "time_unit": "day",
     "random_seed": 42
   },
-
   "initial_conditions": {
     "R_0": 3000000,
     "T_0": 0,
-    "V_0": 1.00,
-    "rho": 0.50,
-    "delta": 0.20,
+    "V_0": 1.0,
+    "rho": 0.7,
+    "delta": 0.2,
     "kappa": 1.0,
     "beta_base": 0.05,
-    "beta_max": 0.30,
+    "beta_max": 0.3,
     "omega": 1.5,
     "epsilon_convergence": 0.01
   },
-
   "agent_parameters": {
     "family_B2C": {
       "initial_count": 1000,
@@ -47,7 +45,6 @@
       "reputation_penalty_multiplier": 5.0
     }
   },
-
   "stochastic_processes": {
     "production_B2C": {
       "model": "geometric_brownian",
@@ -70,7 +67,6 @@
       "sigma_gamma": 0.5
     }
   },
-
   "scenarios": {
     "base": {
       "description": "Equilíbrio Dinâmico",
@@ -82,7 +78,7 @@
     },
     "optimistic": {
       "description": "Flywheel Effect",
-      "nrr": 1.20,
+      "nrr": 1.2,
       "phi_base": 0.01,
       "attack_probability": 0.0,
       "shock_probability": 0.0,
@@ -93,14 +89,13 @@
       "description": "Teste de Fogo",
       "nrr": 0.85,
       "phi_base": 0.02,
-      "attack_probability": 0.10,
+      "attack_probability": 0.1,
       "phi_attack": 0.15,
       "shock_probability": 0.05,
-      "shock_magnitude": 0.30,
+      "shock_magnitude": 0.3,
       "mu_gamma": -6.2
     }
   },
-
   "robustness_criteria": {
     "solvency_tail": "Q_0.05(CCS_t) >= 1.0 for all t",
     "liquidity_tail": "Q_0.05(LCR_t) >= 0.8 for all t",
